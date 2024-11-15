@@ -1,0 +1,409 @@
+chilizspicy:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://spicy-explorer.chiliz.com/api
+      family: blockscout
+      name: Chiliz Spicy Explorer
+      url: https://spicy-explorer.chiliz.com
+  chainId: 88882
+  displayName: Chiliz Spicy Testnet
+  domainId: 88882
+  isTestnet: true
+  name: chilizspicy
+  nativeToken:
+    decimals: 18
+    name: Chiliz
+    symbol: CHZ
+  protocol: ethereum
+  rpcUrls:
+    - http: https://spicy-rpc.chiliz.com
+basesepolia:
+  blockExplorers:
+    - apiUrl: https://base-sepolia.blockscout.com/api
+      family: blockscout
+      name: Blockscout
+      url: https://base-sepolia.blockscout.com
+  blocks:
+    confirmations: 1
+    estimateBlockTime: 2
+    reorgPeriod: 1
+  chainId: 84532
+  deployer:
+    name: Gabriel Antony
+    url: https://twitter.com/gabrielaxyeth
+  displayName: Base Sepolia
+  domainId: 84532
+  gasCurrencyCoinGeckoId: ethereum
+  isTestnet: true
+  name: basesepolia
+  nativeToken:
+    decimals: 18
+    name: Ether
+    symbol: ETH
+  protocol: ethereum
+  rpcUrls:
+    - http: https://sepolia.base.org
+    - http: https://base-sepolia-rpc.publicnode.com
+polygonamoy:
+  blockExplorers:
+    - apiUrl: https://api-amoy.polygonscan.com/api
+      family: etherscan
+      name: Polygon Amoy Explorer
+      url: https://amoy.polygonscan.com
+  blocks:
+    confirmations: 5
+    estimateBlockTime: 2
+    reorgPeriod: 10
+  chainId: 80002
+  deployer:
+    name: Gabriel Antony Xaviour
+    url: https://twitter.com/gabrielaxyeth
+  displayName: Polygon Amoy
+  domainId: 80002
+  gasCurrencyCoinGeckoId: polygon-ecosystem-token
+  isTestnet: true
+  name: polygonamoy
+  nativeToken:
+    decimals: 18
+    name: Polygon Ecosystem Token
+    symbol: POL
+  protocol: ethereum
+  rpcUrls:
+    - http: https://rpc-amoy.polygon.technology
+    - http: https://polygon-amoy-bor-rpc.publicnode.com
+    - http: https://polygon-amoy.blockpi.network/v1/rpc/public
+    - http: https://rpc.ankr.com/polygon_amoy
+worldchainsepolia:
+  blockExplorers:
+    - apiUrl: https://worldchain-sepolia.explorer.alchemy.com/api
+      family: blockscout
+      name: World Chain Sepolia Explorer
+      url: https://worldchain-sepolia.explorer.alchemy.com
+  blocks:
+    confirmations: 5
+    estimateBlockTime: 2
+    reorgPeriod: 10
+  chainId: 4801
+  deployer:
+    name: Gabriel Antony Xaviour
+    url: https://twitter.com/gabrielaxyeth
+  displayName: World Chain Sepolia
+  domainId: 4801
+  isTestnet: true
+  name: worldchainsepolia
+  nativeToken:
+    decimals: 18
+    name: World Chain Ecosystem Token
+    symbol: ETH
+  protocol: ethereum
+  rpcUrls:
+    - http: https://worldchain-sepolia.gateway.tenderly.co
+    - http: https://worldchain-sepolia.g.alchemy.com/public
+    - http: https://4801.rpc.thirdweb.com
+rootstocktestnet:
+  blockExplorers:
+    - apiUrl: https://rootstock-testnet.blockscout.com/api
+      family: blockscout
+      name: Blockscout
+      url: https://rootstock-testnet.blockscout.com
+  blocks:
+    confirmations: 1
+    estimateBlockTime: 30
+    reorgPeriod: 4
+  chainId: 31
+  deployer:
+    name: Rootstock
+    url: https://rootstock.io
+  displayName: Rootstock Testnet
+  domainId: 31
+  isTestnet: true
+  name: rootstocktestnet
+  nativeToken:
+    decimals: 18
+    name: Testnet Rootstock Smart Bitcoin
+    symbol: tRBTC
+  protocol: ethereum
+  rpcUrls:
+    - http: https://rpc.testnet.rootstock.io/YZIZHxGCQAryubOWH7LjdtjNkSDb5J-T
+mantlesepolia:
+  blockExplorers:
+    - apiUrl: https://api-sepolia.mantlescan.xyz/api
+      family: etherscan
+      name: Mantle Testnet Explorer
+      url: https://sepolia.mantlescan.xyz/
+  chainId: 5003
+  deployer:
+    name: gabrielantonyxaviour
+    url: https://github.com/gabrielantonyxaviour
+  displayName: Mantle Sepolia
+  domainId: 5003
+  isTestnet: true
+  name: mantlesepolia
+  nativeToken:
+    decimals: 18
+    name: Mantle
+    symbol: MNT
+  protocol: ethereum
+  rpcUrls:
+    - http: https://rpc.sepolia.mantle.xyz
+scrollsepolia:
+  blockExplorers:
+    - apiUrl: https://api-sepolia.scrollscan.com/api
+      family: etherscan
+      name: Scroll Explorer
+      url: https://sepolia.scrollscan.dev/
+  blocks:
+    confirmations: 1
+    estimateBlockTime: 3
+    reorgPeriod: 1
+  chainId: 534351
+  deployer:
+    name: Gabriel Antony Xaviour
+    url: https://twitter.com/gabrielaxyeth
+  displayName: Scroll Sepolia
+  domainId: 534351
+  gasCurrencyCoinGeckoId: ethereum
+  isTestnet: true
+  name: scrollsepolia
+  nativeToken:
+    decimals: 18
+    name: Ether
+    symbol: ETH
+  protocol: ethereum
+  rpcUrls:
+    - http: https://sepolia-rpc.scroll.io
+    - http: https://rpc.ankr.com/scroll_sepolia_testnet
+    - http: https://scroll-sepolia.blockpi.network/v1/rpc/public
+    - http: https://scroll-sepolia.chainstacklabs.com
+    - http: https://scroll-public.scroll-testnet.quiknode.pro
+kinto:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://explorer.kinto.xyz/api
+      family: blockscout
+      name: Kinto Mainnet Explorer
+      url: https://explorer.kinto.xyz
+  chainId: 7887
+  displayName: Kinto Mainnet
+  domainId: 7887
+  isTestnet: false
+  name: kinto
+  nativeToken:
+    decimals: 18
+    name: Kinto
+    symbol: ETH
+  protocol: ethereum
+  rpcUrls:
+    - http: https://kinto-mainnet.calderachain.xyz/http
+      retry:
+        maxRequests: 10
+    - http: https://rpc.kinto.xyz/http
+      retry:
+        maxRequests: 10
+gnosischiado:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://gnosis-chiado.blockscout.com/api
+      family: blockscout
+      name: Gnosis Chiado Explorer
+      url: https://gnosis-chiado.blockscout.com
+  chainId: 10200
+  displayName: Gnosis Chiado Testnet
+  domainId: 10200
+  isTestnet: true
+  name: gnosischiado
+  nativeToken:
+    decimals: 18
+    name: XDAI Stabelcoin
+    symbol: XDAI
+  protocol: ethereum
+  rpcUrls:
+    - http: https://endpoints.omniatech.io/v1/gnosis/chiado/public
+    - http: https://gnosis-chiado-rpc.publicnode.com
+    - http: https://rpc.chiadochain.net
+incotestnet:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://explorer.testnet.inco.org/api
+      family: blockscout
+      name: Inco Rivest Explorer
+      url: https://explorer.testnet.inco.org
+  chainId: 21097
+  displayName: Inco Rivest Testnet
+  domainId: 21097
+  isTestnet: true
+  name: incotestnet
+  nativeToken:
+    decimals: 18
+    name: INCO
+    symbol: INCO
+  protocol: ethereum
+  rpcUrls:
+    - http: https://validator.rivest.inco.org
+arbitrumsepolia:
+  blockExplorers:
+    - apiUrl: https://api-sepolia.arbiscan.io/api
+      family: etherscan
+      name: Arbiscan
+      url: https://sepolia.arbiscan.io
+  blocks:
+    confirmations: 1
+    estimateBlockTime: 3
+    reorgPeriod: 0
+  chainId: 421614
+  deployer:
+    name: Abacus Works
+    url: https://www.hyperlane.xyz
+  displayName: Arbitrum Sepolia
+  domainId: 421614
+  index:
+    from: 49690504
+  isTestnet: true
+  name: arbitrumsepolia
+  nativeToken:
+    decimals: 18
+    name: Ether
+    symbol: ETH
+  protocol: ethereum
+  rpcUrls:
+    - http: https://arbitrum-sepolia.blockpi.network/v1/rpc/public
+    - http: https://sepolia-rollup.arbitrum.io/rpc
+  technicalStack: arbitrumnitro
+fhenixtestnet:
+  blockExplorers:
+    - apiUrl: https://api.helium.fhenix.zone
+      family: blockscout
+      name: Fhenix Helium Testnet Explorer
+      url: https://explorer.helium.fhenix.zone
+  chainId: 8008135
+  deployer:
+    name: d0x471b
+    url: https://t.me/d0x471b
+  displayName: Fhenix Helium Testnet
+  domainId: 8008135
+  index:
+    from: 140556
+  isTestnet: true
+  name: fhenixtestnet
+  nativeToken:
+    decimals: 18
+    name: Testnet Fhenix
+    symbol: tFHE
+  protocol: ethereum
+  rpcUrls:
+    - http: https://api.helium.fhenix.zone
+  technicalStack: arbitrumnitro
+zircuitsepolia:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://explorer.testnet.zircuit.com/api
+      family: blockscout
+      name: Zircuit Sepolia Explorer
+      url: https://explorer.testnet.zircuit.com
+  chainId: 48899
+  displayName: Zircuit Sepolia Testnet
+  domainId: 48899
+  isTestnet: true
+  name: zircuitsepolia
+  nativeToken:
+    decimals: 18
+    name: Ethereum
+    symbol: ETH
+  protocol: ethereum
+  rpcUrls:
+    - http: https://zircuit1-testnet.p2pify.com
+lineasepolia:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://explorer.sepolia.linea.build/api
+      family: blockscout
+      name: Linea Sepolia Explorer
+      url: https://explorer.sepolia.linea.build
+  chainId: 59141
+  displayName: Linea Sepolia Testnet
+  domainId: 59141
+  isTestnet: true
+  name: lineasepolia
+  nativeToken:
+    decimals: 18
+    name: Ethereum
+    symbol: ETH
+  protocol: ethereum
+  rpcUrls:
+    - http: https://linea-sepolia.blockpi.network/v1/rpc/public
+flowtestnet:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://evm-testnet.flowscan.io/api
+      family: blockscout
+      name: Linea Sepolia Explorer
+      url: https://evm-testnet.flowscan.io
+  chainId: 545
+  displayName: Flow EVM Testnet
+  domainId: 545
+  isTestnet: true
+  name: flowtestnet
+  nativeToken:
+    decimals: 18
+    name: Flow Token
+    symbol: FLOW
+  protocol: ethereum
+  rpcUrls:
+    - http: https://testnet.evm.nodes.onflow.org
+sepolia:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://eth-sepolia.blockscout.com/api
+      family: blockscout
+      name: Eth Sepolia Explorer
+      url: https://eth-sepolia.blockscout.com
+  chainId: 11155111
+  displayName: Ethereum Sepolia
+  domainId: 11155111
+  isTestnet: true
+  name: sepolia
+  nativeToken:
+    decimals: 18
+    name: Ether
+    symbol: ETH
+  protocol: ethereum
+  rpcUrls:
+    - http: https://sepolia.drpc.org
+oasissaphire:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://explorer.oasis.io/testnet/sapphire/api
+      family: blockscout
+      name: Oasis Saphire Explorer
+      url: https://explorer.oasis.io/testnet/sapphire/
+  chainId: 23295
+  displayName: Oasis Saphire Testnet
+  domainId: 23295
+  isTestnet: true
+  name: oasissaphire
+  nativeToken:
+    decimals: 18
+    name: Test Oasis
+    symbol: TEST
+  protocol: ethereum
+  rpcUrls:
+    - http: https://testnet.sapphire.oasis.io
+filcalibration:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://filecoin-testnet.blockscout.com/api
+      family: blockscout
+      name: Oasis Saphire Explorer
+      url: https://filecoin-testnet.blockscout.com/
+  chainId: 314159
+  displayName: Filecoin Calibration Testnet
+  domainId: 314159
+  isTestnet: true
+  name: fil-calibration
+  nativeToken:
+    decimals: 18
+    name: Test Filecoin
+    symbol: tFIL
+  protocol: ethereum
+  rpcUrls:
+    - http: https://rpc.ankr.com/filecoin_testnet
