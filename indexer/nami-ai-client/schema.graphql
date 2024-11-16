@@ -1,0 +1,115 @@
+type disasterDescriptive @entity {
+  "the id of the disaster"
+  id: ID!
+
+  "name of the disaster"
+  name: String!
+
+  "description of the disaster"
+  description: String!
+
+  "type of disaster (earthquake, flood, etc.)"
+  disasterType: String!
+
+  "location where disaster occurred"
+  location: String!
+
+  "timestamp when disaster was created"
+  createdAt: BigInt!
+
+  "total funds needed for disaster relief"
+  fundsNeeded: BigInt!
+
+  "ENS name associated with the disaster"
+  ensName: String!
+
+  "Base account name associated with the disaster"
+  baseName: String!
+
+  "address of the vault created for this disaster"
+  vaultAddress: Bytes!
+
+  "attestation id for this disaster creation"
+  attestationId: BigInt!
+
+  "transaction hash in which disaster was created"
+  transactionHash: Bytes!
+
+  "hyperlane message id for this disaster"
+  hyperlaneMessageId: Bytes!
+
+  "all fund releases associated with this disaster"
+  fundReleases: [fundReleaseDescriptive!]! @derivedFrom(field: "disaster")
+
+  "total funds released for this disaster"
+  totalFundsReleased: BigInt!
+
+  "total number of beneficiaries who received funds"
+  totalBeneficiaries: BigInt!
+}
+
+type beneficiary @entity {
+  "the beneficiary address"
+  id: ID!
+
+  "name of the beneficiary organization"
+  name: String!
+
+  "all fund releases received by this beneficiary"
+  receivedFunds: [fundReleaseDescriptive!]! @derivedFrom(field: "beneficiary")
+
+  "total amount received across all disasters"
+  totalAmountReceived: BigInt!
+
+  "total number of fund releases received"
+  totalFundReleases: BigInt!
+
+  "disasters for which beneficiary received funds"
+  disasters: [disasterDescriptive!]!
+}
+
+type fundReleaseDescriptive @entity {
+  "disaster id + beneficiary address + attestation id"
+  id: ID!
+
+  "disaster associated with this fund release"
+  disaster: disasterDescriptive!
+
+  "beneficiary who received the funds"
+  beneficiary: beneficiary!
+
+  "attestation id for this fund release"
+  attestationId: BigInt!
+
+  "comments provided during fund release"
+  comments: String!
+
+  "total USD amount released"
+  amountInUSD: BigInt!
+
+  "hyperlane message id for this fund claim"
+  hyperlaneMessageId: Bytes!
+
+  "claims made across different chains"
+  claims: [claim!]! @derivedFrom(field: "fundReleaseDescriptive")
+
+  "transaction hash in which funds were released"
+  transactionHash: Bytes!
+}
+
+type claim @entity {
+  "fund release id + chain id"
+  id: ID!
+
+  "chain id where claim was made"
+  chainId: BigInt!
+
+  "fund release associated with this claim"
+  fundReleaseDescriptive: fundReleaseDescriptive!
+
+  "tokens claimed (0: Native, 1: WETH, 2: USDC, 3: USDT)"
+  tokens: [Int!]!
+
+  "amounts claimed for each token"
+  amounts: [BigInt!]!
+}

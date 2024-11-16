@@ -1,18 +1,20 @@
 {
-  "name": "basesepoliafinal",
+  "name": "kinto-transfers",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ basesepoliafinal",
-    "create-local": "graph create --node http://localhost:8020/ basesepoliafinal",
-    "remove-local": "graph remove --node http://localhost:8020/ basesepoliafinal",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 basesepoliafinal",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ kinto-transfers",
+    "create-local": "graph create --node http://localhost:8020/ kinto-transfers",
+    "remove-local": "graph remove --node http://localhost:8020/ kinto-transfers",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 kinto-transfers",
     "test": "graph test"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.89.0",
     "@graphprotocol/graph-ts": "0.32.0"
   },
-  "devDependencies": { "matchstick-as": "0.5.0" }
+  "devDependencies": {
+    "matchstick-as": "0.5.0"
+  }
 }

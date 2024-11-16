@@ -5,12 +5,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: TestingCore
-    network: polygon-amoy
+    name: NamiCore
+    network: kinto
     source:
       address: "0x5c248293e02A2FE29B0a8d72d3AB4124CFac56e7"
-      abi: TestingCore
-      startBlock: 14445220
+      abi: NamiCore
+      startBlock: 444762
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -21,15 +21,15 @@ dataSources:
         - FundClaimInitiated
         - FundingUnlocked
       abis:
-        - name: TestingCore
-          file: ./abis/TestingCore.json
+        - name: NamiCore
+          file: ./abis/NamiCore.json
       eventHandlers:
-        - event: DisasterCreated(uint256,bytes32,uint256,address)
+        - event: DisasterCreated(uint256,uint64,uint256,address)
           handler: handleDisasterCreated
+        - event: FundClaimInitiated(uint256,address,(uint32,uint256,uint256,uint256,uint256)[])
+          handler: handleFundClaimInitiated
+        - event: FundingUnlocked(uint256,uint256,uint64,address,(uint32,uint256,uint256,uint256,uint256)[],uint256)
+          handler: handleFundingUnlocked
         - event: FundClaimFailed(uint256,address,uint32,uint8,uint256)
           handler: handleFundClaimFailed
-        - event: FundClaimInitiated(uint256,address,(uint32,uint8[],uint256[])[])
-          handler: handleFundClaimInitiated
-        - event: FundingUnlocked(uint256,uint256,address,(uint32,uint8[],uint256[])[],uint256,bytes32)
-          handler: handleFundingUnlocked
-      file: ./src/testing-core.ts
+      file: ./src/nami-core.ts

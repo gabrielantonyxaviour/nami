@@ -17,7 +17,7 @@ const priceFeedIds = [
   "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
 ];
 
-const namiMpcWalletAddress = "0xC22ca23823e8f913C901f1DE1FACfc5A09F31203";
+const namiMpcWalletAddress = "0xD64fEF5aadD3a3996608B6a90A9E6a04d5A691ED";
 
 const networks = {
   baseSepolia: {
@@ -35,7 +35,7 @@ const networks = {
     isp: "0x4e4af2a21ebf62850fD99Eb6253E1eFBb56098cD",
     vaultFactory: "0x14260251f1640323677E7eBc1d6EcDC6D407d212",
     pythFeed: "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729",
-    aiClient: "0xd7a21be117996921a892a3A073DdA28233F70E6c",
+    aiClient: "0x2AF692b4C3507F414D829DcfAB3603235C7916b1",
     createDisasterSchemaId: "0x3d5",
     fundDisasterSchemaId: "0x3d2",
     tokens: {

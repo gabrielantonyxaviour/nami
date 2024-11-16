@@ -3,7 +3,7 @@ type disaster @entity {
   id: ID!
 
   "attestation id for the disaster"
-  attestationId: Bytes!
+  attestationId: String!
 
   "vault address created for the disaster"
   vaultAddress: Bytes!
@@ -61,7 +61,7 @@ type funding @entity {
   claimed: Boolean!
 
   "attestation id for funding approval"
-  attestationId: Bytes!
+  attestationId: String!
 
   "transaction hash of funding unlock"
   transactionHash: Bytes!
@@ -76,9 +76,6 @@ type claim @entity {
 
   "chain id where claim is to be processed"
   chainId: BigInt!
-
-  "array of token indices"
-  tokens: [BigInt!]!
 
   "array of token amounts"
   amounts: [BigInt!]!

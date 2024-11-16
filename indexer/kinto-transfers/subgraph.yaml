@@ -10,7 +10,7 @@ dataSources:
     source:
       abi: WETH
       address: "0x86c207ebF3aE9e9A93B9a045360a8f5Fc983C777"
-      startBlock: 442847
+      startBlock: 444762
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -30,7 +30,7 @@ dataSources:
     source:
       abi: USDC
       address: "0x30DFfC0693bb1bBd756bDFFdc8df5F56cc2d30C2"
-      startBlock: 442847
+      startBlock: 444762
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -50,7 +50,7 @@ dataSources:
     source:
       abi: USDT
       address: "0x35BFcbcFEb65db335e65256690677eF26fE8da88"
-      startBlock: 442847
+      startBlock: 444762
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

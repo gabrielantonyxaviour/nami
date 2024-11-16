@@ -9,8 +9,8 @@ import {
 import { BigInt, Bytes, Address } from "@graphprotocol/graph-ts";
 import { DisasterCreated } from "../generated/schema";
 import { DisasterCreated as DisasterCreatedEvent } from "../generated/TestingCore/TestingCore";
-import { handleDisasterCreated } from "../src/testing-core";
-import { createDisasterCreatedEvent } from "./testing-core-utils";
+import { handleDisasterCreated } from "../src/nami-client";
+import { createDisasterCreatedEvent } from "./nami-client-utils";
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0

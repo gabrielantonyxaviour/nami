@@ -4,7 +4,7 @@ import {
   FundingUnlocked as FundingUnlockedEvent,
   FundClaimInitiated as FundClaimInitiatedEvent,
   FundClaimFailed as FundClaimFailedEvent,
-} from "../generated/TestingCore/TestingCore";
+} from "../generated/NamiCore/NamiCore";
 import {
   disaster as Disaster,
   beneficiary as Beneficiary,
@@ -15,7 +15,8 @@ import {
 export function handleDisasterCreated(event: DisasterCreatedEvent): void {
   let disaster = new Disaster(event.params.disasterId.toString());
 
-  disaster.attestationId = event.params.attestationId;
+  disaster.attestationId =
+    "onchain_evm_84532_" + event.params.attestationId.toHexString();
   disaster.vaultAddress = event.params.vaultAddress;
   disaster.estimatedRequirementInUSD = event.params.estimatedRequirementInUSD;
   disaster.totalFundingAmount = BigInt.fromI32(0);
@@ -58,7 +59,8 @@ export function handleFundingUnlocked(event: FundingUnlockedEvent): void {
   funding.beneficiary = event.params.beneficiary.toHexString();
   funding.amountInUSD = event.params.amountInUsd;
   funding.claimed = false;
-  funding.attestationId = event.params.attestationId;
+  funding.attestationId =
+    "onchain_evm_84532_" + event.params.attestationId.toHexString();
   funding.transactionHash = event.transaction.hash;
   funding.save();
 
@@ -73,9 +75,10 @@ export function handleFundingUnlocked(event: FundingUnlockedEvent): void {
     );
     claim.funding = event.params.fundingId.toString();
     claim.chainId = claims[i].chainId;
-    for (let j = 0; j < claims[i].tokens.length; j++)
-      claim.tokens[j] = BigInt.fromI32(claims[i].tokens[j]);
-    claim.amounts = claims[i].amounts;
+    claim.amounts[0] = claims[i].ethAmount;
+    claim.amounts[1] = claims[i].wethAmount;
+    claim.amounts[2] = claims[i].usdcAmount;
+    claim.amounts[3] = claims[i].usdtAmount;
     claim.transactionHash = event.transaction.hash;
     claim.save();
   }

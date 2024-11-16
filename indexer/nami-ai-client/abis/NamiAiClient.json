@@ -1,0 +1,685 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "contract IMailbox",
+            "name": "mailbox",
+            "type": "address"
+          },
+          {
+            "internalType": "contract ISP",
+            "name": "spInstance",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IPyth",
+            "name": "priceOracle",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32[4]",
+            "name": "priceFeedIds",
+            "type": "bytes32[4]"
+          },
+          {
+            "internalType": "uint64",
+            "name": "createDisasterSchemaId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "unlockFundsSchemaId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "testingCore",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "testingAiAgent",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct NamiAiClient.ConstructorParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "NotAIAgent",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwner",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "messageId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "attestationId",
+        "type": "uint64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "disasterType",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fundsNeeded",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "vaultAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "ensName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "baseName",
+            "type": "string"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct NamiAiClient.Disaster",
+        "name": "disaster",
+        "type": "tuple"
+      }
+    ],
+    "name": "CreateDisasterInitiated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "messageId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "disasterId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "attestationId",
+        "type": "uint64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "beneficiaryName",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "beneficiaryAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "comments",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint32",
+                "name": "chainId",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint8[]",
+                "name": "tokens",
+                "type": "uint8[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "amounts",
+                "type": "uint256[]"
+              }
+            ],
+            "internalType": "struct NamiAiClient.Claim[]",
+            "name": "claims",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "priceUpdates",
+            "type": "bytes[]"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct NamiAiClient.UnlockFunds",
+        "name": "unlockFunds",
+        "type": "tuple"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalAmountInUsd",
+        "type": "uint256"
+      }
+    ],
+    "name": "UnlockFundsInitiated",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "KINTO_DOMAIN_ID",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "addressToBytes32",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "aiAgent",
+        "type": "address"
+      }
+    ],
+    "name": "allowlistAiAgent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "allowlistedAddresses",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_bytes32",
+        "type": "bytes32"
+      }
+    ],
+    "name": "bytes32ToAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "disasterType",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fundsNeeded",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "vaultAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "ensName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "baseName",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct NamiAiClient.Disaster",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "name": "createDisaster",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "createDisasterSchemaId",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "disasterCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "disasterIdToAttestationId",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "price",
+            "type": "int64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "conf",
+            "type": "uint64"
+          },
+          {
+            "internalType": "int32",
+            "name": "expo",
+            "type": "int32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "publishTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PythStructs.Price",
+        "name": "_priceData",
+        "type": "tuple"
+      }
+    ],
+    "name": "formatToUsdInWei",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "chainId",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8[]",
+            "name": "tokens",
+            "type": "uint8[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "amounts",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct NamiAiClient.Claim[]",
+        "name": "_claims",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "olderThan",
+        "type": "uint256"
+      }
+    ],
+    "name": "getUSDAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_usdAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_disasterId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getVaultAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "mailbox",
+    "outputs": [
+      {
+        "internalType": "contract IMailbox",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "priceFeedIds",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceOracle",
+    "outputs": [
+      {
+        "internalType": "contract IPyth",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "spInstance",
+    "outputs": [
+      {
+        "internalType": "contract ISP",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "testingCore",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_disasterId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "beneficiaryName",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "beneficiaryAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "comments",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint32",
+                "name": "chainId",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint8[]",
+                "name": "tokens",
+                "type": "uint8[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "amounts",
+                "type": "uint256[]"
+              }
+            ],
+            "internalType": "struct NamiAiClient.Claim[]",
+            "name": "claims",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "priceUpdates",
+            "type": "bytes[]"
+          }
+        ],
+        "internalType": "struct NamiAiClient.UnlockFunds",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "name": "unlockFunds",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unlockFundsSchemaId",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_createDisasterSchemaId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_unlockFundsSchemaId",
+        "type": "uint64"
+      }
+    ],
+    "name": "updateSchemaIds",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

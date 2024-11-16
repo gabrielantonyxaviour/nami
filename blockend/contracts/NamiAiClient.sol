@@ -91,8 +91,8 @@ contract NamiAiClient {
         _;
     }
 
-    event CreateDisasterInitiated(bytes32 _messageId, uint64 attestationId, Disaster disaster);
-    event UnlockFundsInitiated(bytes32 _messageId, uint64 attestationId, UnlockFunds unlockFunds);
+    event CreateDisasterInitiated(bytes32 messageId, uint64 attestationId, Disaster disaster);
+    event UnlockFundsInitiated(bytes32 messageId, uint256 disasterId, uint64 attestationId, UnlockFunds unlockFunds, uint256 totalAmountInUsd);
 
     function allowlistAiAgent(address aiAgent) external onlyOwner {
         allowlistedAddresses[aiAgent] = true;
@@ -155,7 +155,7 @@ contract NamiAiClient {
         uint64 _attestationId = spInstance.attest(a, "", "", "");
         bytes32 _messageId = mailbox.dispatch{value: 0}(KINTO_DOMAIN_ID, addressToBytes32(testingCore), abi.encode(uint8(1), abi.encode(_attestationId, _disasterId, _params.beneficiaryAddress, _params.claims, _totalUsdAmount)));
 
-        emit UnlockFundsInitiated(_messageId, _attestationId, _params);
+        emit UnlockFundsInitiated(_messageId, _disasterId, _attestationId, _params, _totalUsdAmount);
 
     }  
 
