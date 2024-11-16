@@ -1,0 +1,18 @@
+API Key
+
+pG4v7OjUJWisZmeRTL8LzfDzn
+
+API Key Secret
+
+ZZEaqj25wX4wbR8WtGuvZQ2Rp7LC2SMQLvLY19bCM9DyvpWKbJ
+
+Access Token
+
+1617538045682810883-KGHmH1jwoBpNeysi3KL8kJMynAk4m1
+
+Access Token Secret
+
+GaDUDagQCb7pES7cpBAXlcibHt5YudLz4fwqvvPK8gRAJ
+
+
+

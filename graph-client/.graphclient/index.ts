@@ -3,38 +3,19 @@ import { GraphQLResolveInfo, SelectionSetNode, FieldNode, GraphQLScalarType, Gra
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { gql } from '@graphql-mesh/utils';
 
-import type { GetMeshOptions } from '@graphql-mesh/runtime';
-import type { YamlConfig } from '@graphql-mesh/types';
-import { PubSub } from '@graphql-mesh/utils';
-import { DefaultLogger } from '@graphql-mesh/utils';
-import MeshCache from "@graphql-mesh/cache-localforage";
-import { fetch as fetchFn } from '@whatwg-node/fetch';
-
-import { MeshResolvedSource } from '@graphql-mesh/runtime';
-import { MeshTransform, MeshPlugin } from '@graphql-mesh/types';
-import GraphqlHandler from "@graphql-mesh/graphql"
-import StitchingMerger from "@graphql-mesh/merger-stitching";
-import { printWithCache } from '@graphql-mesh/utils';
-import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations';
+import { findAndParseConfig } from '@graphql-mesh/cli';
 import { createMeshHTTPHandler, MeshHTTPHandler } from '@graphql-mesh/http';
 import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext, MeshInstance } from '@graphql-mesh/runtime';
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
 import type { NamiCoreTypes } from './sources/NamiCore/types';
-import type { KintoTransfersTypes } from './sources/KintoTransfers/types';
 import type { NamiAiClientTypes } from './sources/NamiAiClient/types';
 import type { PolygonTransfersTypes } from './sources/PolygonTransfers/types';
-import type { ScrollTransfersTypes } from './sources/ScrollTransfers/types';
-import type { EthereumTransfersTypes } from './sources/EthereumTransfers/types';
+import type { KintoTransfersTypes } from './sources/KintoTransfers/types';
 import type { BaseTransfersTypes } from './sources/BaseTransfers/types';
-import * as importedModule$0 from "./sources/KintoTransfers/introspectionSchema";
-import * as importedModule$1 from "./sources/NamiCore/introspectionSchema";
-import * as importedModule$2 from "./sources/PolygonTransfers/introspectionSchema";
-import * as importedModule$3 from "./sources/NamiAiClient/introspectionSchema";
-import * as importedModule$4 from "./sources/EthereumTransfers/introspectionSchema";
-import * as importedModule$5 from "./sources/BaseTransfers/introspectionSchema";
-import * as importedModule$6 from "./sources/ScrollTransfers/introspectionSchema";
+import type { EthereumTransfersTypes } from './sources/EthereumTransfers/types';
+import type { ScrollTransfersTypes } from './sources/ScrollTransfers/types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -5815,27 +5796,6 @@ const baseDir = pathModule.join(typeof __dirname === 'string' ? __dirname : '/',
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/KintoTransfers/introspectionSchema":
-      return Promise.resolve(importedModule$0) as T;
-    
-    case ".graphclient/sources/NamiCore/introspectionSchema":
-      return Promise.resolve(importedModule$1) as T;
-    
-    case ".graphclient/sources/PolygonTransfers/introspectionSchema":
-      return Promise.resolve(importedModule$2) as T;
-    
-    case ".graphclient/sources/NamiAiClient/introspectionSchema":
-      return Promise.resolve(importedModule$3) as T;
-    
-    case ".graphclient/sources/EthereumTransfers/introspectionSchema":
-      return Promise.resolve(importedModule$4) as T;
-    
-    case ".graphclient/sources/BaseTransfers/introspectionSchema":
-      return Promise.resolve(importedModule$5) as T;
-    
-    case ".graphclient/sources/ScrollTransfers/introspectionSchema":
-      return Promise.resolve(importedModule$6) as T;
-    
     default:
       return Promise.reject(new Error(`Cannot find module '${relativeModuleId}'.`));
   }
@@ -5850,192 +5810,15 @@ const rootStore = new MeshStore('.graphclient', new FsStoreStorageAdapter({
   validate: false
 });
 
-export const rawServeConfig: YamlConfig.Config['serve'] = undefined as any
-export async function getMeshOptions(): Promise<GetMeshOptions> {
-const pubsub = new PubSub();
-const sourcesStore = rootStore.child('sources');
-const logger = new DefaultLogger("GraphClient");
-const cache = new (MeshCache as any)({
-      ...({} as any),
-      importFn,
-      store: rootStore.child('cache'),
-      pubsub,
-      logger,
-    } as any)
-
-const sources: MeshResolvedSource[] = [];
-const transforms: MeshTransform[] = [];
-const additionalEnvelopPlugins: MeshPlugin<any>[] = [];
-const namiCoreTransforms = [];
-const namiAiClientTransforms = [];
-const kintoTransfersTransforms = [];
-const polygonTransfersTransforms = [];
-const ethereumTransfersTransforms = [];
-const baseTransfersTransforms = [];
-const scrollTransfersTransforms = [];
-const additionalTypeDefs = [] as any[];
-const namiCoreHandler = new GraphqlHandler({
-              name: "NamiCore",
-              config: {"endpoint":"http://localhost:8000/subgraphs/name/nami-core"},
-              baseDir,
-              cache,
-              pubsub,
-              store: sourcesStore.child("NamiCore"),
-              logger: logger.child("NamiCore"),
-              importFn,
-            });
-const namiAiClientHandler = new GraphqlHandler({
-              name: "NamiAiClient",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/30735/nami-ai-client/version/latest"},
-              baseDir,
-              cache,
-              pubsub,
-              store: sourcesStore.child("NamiAiClient"),
-              logger: logger.child("NamiAiClient"),
-              importFn,
-            });
-const kintoTransfersHandler = new GraphqlHandler({
-              name: "KintoTransfers",
-              config: {"endpoint":"http://localhost:8000/subgraphs/name/kinto-transfers"},
-              baseDir,
-              cache,
-              pubsub,
-              store: sourcesStore.child("KintoTransfers"),
-              logger: logger.child("KintoTransfers"),
-              importFn,
-            });
-const polygonTransfersHandler = new GraphqlHandler({
-              name: "PolygonTransfers",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/30735/polygon-token-transfers/version/latest"},
-              baseDir,
-              cache,
-              pubsub,
-              store: sourcesStore.child("PolygonTransfers"),
-              logger: logger.child("PolygonTransfers"),
-              importFn,
-            });
-const ethereumTransfersHandler = new GraphqlHandler({
-              name: "EthereumTransfers",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/30735/ethereum-token-transfers/version/latest"},
-              baseDir,
-              cache,
-              pubsub,
-              store: sourcesStore.child("EthereumTransfers"),
-              logger: logger.child("EthereumTransfers"),
-              importFn,
-            });
-const baseTransfersHandler = new GraphqlHandler({
-              name: "BaseTransfers",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/30735/base-token-transfers/version/latest"},
-              baseDir,
-              cache,
-              pubsub,
-              store: sourcesStore.child("BaseTransfers"),
-              logger: logger.child("BaseTransfers"),
-              importFn,
-            });
-const scrollTransfersHandler = new GraphqlHandler({
-              name: "ScrollTransfers",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/30735/scroll-token-transfers/version/latest"},
-              baseDir,
-              cache,
-              pubsub,
-              store: sourcesStore.child("ScrollTransfers"),
-              logger: logger.child("ScrollTransfers"),
-              importFn,
-            });
-sources[0] = {
-          name: 'NamiCore',
-          handler: namiCoreHandler,
-          transforms: namiCoreTransforms
-        }
-sources[1] = {
-          name: 'NamiAiClient',
-          handler: namiAiClientHandler,
-          transforms: namiAiClientTransforms
-        }
-sources[2] = {
-          name: 'KintoTransfers',
-          handler: kintoTransfersHandler,
-          transforms: kintoTransfersTransforms
-        }
-sources[3] = {
-          name: 'PolygonTransfers',
-          handler: polygonTransfersHandler,
-          transforms: polygonTransfersTransforms
-        }
-sources[4] = {
-          name: 'EthereumTransfers',
-          handler: ethereumTransfersHandler,
-          transforms: ethereumTransfersTransforms
-        }
-sources[5] = {
-          name: 'BaseTransfers',
-          handler: baseTransfersHandler,
-          transforms: baseTransfersTransforms
-        }
-sources[6] = {
-          name: 'ScrollTransfers',
-          handler: scrollTransfersHandler,
-          transforms: scrollTransfersTransforms
-        }
-const additionalResolvers = [] as any[]
-const merger = new(StitchingMerger as any)({
-        cache,
-        pubsub,
-        logger: logger.child('stitchingMerger'),
-        store: rootStore.child('stitchingMerger')
-      })
-const documentHashMap = {
-        "749505184cd001918180d0783d0b92f8346db57e620524d6e91982753c3d90a0": GetBalancesDocument,
-"68f94a7f16be2d33bbdd4f1634e93ada47916ed05b70a903b7b4411b95838bf5": GetDisasterByAddressDocument,
-"87eddab482c0cc525befa2bd73a8c67c6c8ed11e25f23e09c34a5d5c8a090da6": GetDisastersDocument
-      }
-additionalEnvelopPlugins.push(usePersistedOperations({
-        getPersistedOperation(key) {
-          return documentHashMap[key];
-        },
-        ...{}
-      }))
-
-  return {
-    sources,
-    transforms,
-    additionalTypeDefs,
-    additionalResolvers,
-    cache,
-    pubsub,
-    merger,
-    logger,
-    additionalEnvelopPlugins,
-    get documents() {
-      return [
-      {
-        document: GetBalancesDocument,
-        get rawSDL() {
-          return printWithCache(GetBalancesDocument);
-        },
-        location: 'GetBalancesDocument.graphql',
-        sha256Hash: '749505184cd001918180d0783d0b92f8346db57e620524d6e91982753c3d90a0'
-      },{
-        document: GetDisasterByAddressDocument,
-        get rawSDL() {
-          return printWithCache(GetDisasterByAddressDocument);
-        },
-        location: 'GetDisasterByAddressDocument.graphql',
-        sha256Hash: '68f94a7f16be2d33bbdd4f1634e93ada47916ed05b70a903b7b4411b95838bf5'
-      },{
-        document: GetDisastersDocument,
-        get rawSDL() {
-          return printWithCache(GetDisastersDocument);
-        },
-        location: 'GetDisastersDocument.graphql',
-        sha256Hash: '87eddab482c0cc525befa2bd73a8c67c6c8ed11e25f23e09c34a5d5c8a090da6'
-      }
-    ];
-    },
-    fetchFn,
-  };
+export function getMeshOptions() {
+  console.warn('WARNING: These artifacts are built for development mode. Please run "graphclient build" to build production artifacts');
+  return findAndParseConfig({
+    dir: baseDir,
+    artifactsDir: ".graphclient",
+    configName: "graphclient",
+    additionalPackagePrefixes: ["@graphprotocol/client-"],
+    initialLoggerPrefix: "GraphClient",
+  });
 }
 
 export function createBuiltMeshHTTPHandler<TServerContext = {}>(): MeshHTTPHandler<TServerContext> {
@@ -6045,7 +5828,6 @@ export function createBuiltMeshHTTPHandler<TServerContext = {}>(): MeshHTTPHandl
     rawServeConfig: undefined,
   })
 }
-
 
 let meshInstance$: Promise<MeshInstance> | undefined;
 
