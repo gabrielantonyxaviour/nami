@@ -7,17 +7,16 @@ import "@openzeppelin/contracts/utils/Create2.sol";
 
 import "./hyperlane/Structs.sol";
 import "./hyperlane/IMailbox.sol";
-import "./interface/IVaultFactory.sol"; 
-import { ISP } from "@ethsign/sign-protocol-evm/src/interfaces/ISP.sol";
-import { Attestation } from "@ethsign/sign-protocol-evm/src/models/Attestation.sol";
-import { DataLocation } from "@ethsign/sign-protocol-evm/src/models/DataLocation.sol";
+import "./interface/IVaultFactory.sol";
+import {ISP} from "@ethsign/sign-protocol-evm/src/interfaces/ISP.sol";
+import {Attestation} from "@ethsign/sign-protocol-evm/src/models/Attestation.sol";
+import {DataLocation} from "@ethsign/sign-protocol-evm/src/models/DataLocation.sol";
 
 error InsufficientBetAmount(uint256 betAmount, uint256 requiredAmount);
 error NotAIAgent();
 error NotOwner(address owner, address caller);
 
 contract NamiAiClient {
-
     struct ConstructorParams {
         IMailbox mailbox;
         ISP spInstance;
@@ -45,13 +44,14 @@ contract NamiAiClient {
         address beneficiaryAddress;
         string comments;
         Claim[] claims;
-        bytes[] priceUpdates;
     }
-    
+
     struct Claim {
         uint32 chainId;
-        uint8[] tokens;
-        uint256[] amounts;
+        uint256 ethAmount;
+        uint256 wethAmount;
+        uint256 usdcAmount;
+        uint256 usdtAmount;
     }
 
     IMailbox public mailbox;
@@ -60,8 +60,8 @@ contract NamiAiClient {
     uint32 public KINTO_DOMAIN_ID = 7887;
     address public owner;
     address public namiCore;
-    mapping(address=>bool) public allowlistedAddresses;
-    mapping(uint256=>uint64) public disasterIdToAttestationId;
+    mapping(address => bool) public allowlistedAddresses;
+    mapping(uint256 => uint64) public disasterIdToAttestationId;
     ISP public spInstance;
     bytes32[4] public priceFeedIds;
     uint64 public createDisasterSchemaId;
@@ -79,125 +79,203 @@ contract NamiAiClient {
         namiCore = _params.namiCore;
         owner = msg.sender;
         allowlistedAddresses[_params.namiMpcWallet] = true;
-        vaultFactory= _params.vaultFactory;
+        vaultFactory = _params.vaultFactory;
     }
 
     modifier onlyOwner() {
-        if(msg.sender != owner) revert NotOwner(owner, msg.sender);
+        if (msg.sender != owner) revert NotOwner(owner, msg.sender);
         _;
     }
 
     modifier onlyAiAgent() {
-        if(!allowlistedAddresses[msg.sender]) revert NotAIAgent();
+        if (!allowlistedAddresses[msg.sender]) revert NotAIAgent();
         _;
     }
 
-    event CreateDisasterInitiated(bytes32 messageId, uint64 attestationId, Disaster disaster, address vaultAddress);
-    event UnlockFundsInitiated(bytes32 messageId, uint256 disasterId, uint64 attestationId, UnlockFunds unlockFunds, uint256 totalAmountInUsd);
+    event CreateDisasterInitiated(
+        bytes32 messageId,
+        uint64 attestationId,
+        Disaster disaster,
+        address vaultAddress
+    );
+    event UnlockFundsInitiated(
+        bytes32 messageId,
+        uint256 disasterId,
+        uint64 attestationId,
+        UnlockFunds unlockFunds,
+        uint256 totalAmountInUsd
+    );
 
     function allowlistAiAgent(address aiAgent) external onlyOwner {
         allowlistedAddresses[aiAgent] = true;
     }
 
-    function updateSchemaIds(uint64 _createDisasterSchemaId, uint64 _unlockFundsSchemaId) external onlyOwner {
+    function updateSchemaIds(
+        uint64 _createDisasterSchemaId,
+        uint64 _unlockFundsSchemaId
+    ) external onlyOwner {
         createDisasterSchemaId = _createDisasterSchemaId;
         unlockFundsSchemaId = _unlockFundsSchemaId;
     }
 
     function createDisaster(Disaster memory _params) external onlyAiAgent {
         bytes[] memory recipients = new bytes[](1);
-        recipients[0] = abi.encode(msg.sender); 
+        recipients[0] = abi.encode(msg.sender);
 
         address vaultAddress = getVaultAddress(disasterCount);
 
-        bytes memory data = abi.encode(_params.name, _params.description, _params.disasterType, _params.location, block.timestamp, _params.fundsNeeded, vaultAddress, _params.ensName, _params.baseName);
+        bytes memory data = abi.encode(
+            _params.name,
+            _params.description,
+            _params.disasterType,
+            _params.location,
+            block.timestamp,
+            _params.fundsNeeded,
+            vaultAddress,
+            _params.ensName,
+            _params.baseName
+        );
         Attestation memory a = Attestation({
-                schemaId: createDisasterSchemaId,
-                linkedAttestationId: 0,
-                attestTimestamp: 0,
-                revokeTimestamp: 0,
-                attester: address(this),
-                validUntil: 0,
-                dataLocation: DataLocation.ONCHAIN,
-                revoked: false,
-                recipients: recipients,
-                data: data 
+            schemaId: createDisasterSchemaId,
+            linkedAttestationId: 0,
+            attestTimestamp: 0,
+            revokeTimestamp: 0,
+            attester: address(this),
+            validUntil: 0,
+            dataLocation: DataLocation.ONCHAIN,
+            revoked: false,
+            recipients: recipients,
+            data: data
         });
 
         uint64 _attestationId = spInstance.attest(a, "", "", "");
         disasterIdToAttestationId[disasterCount] = _attestationId;
-        bytes32 _messageId = mailbox.dispatch{value: 0}(KINTO_DOMAIN_ID, addressToBytes32(namiCore), abi.encode(uint8(0), abi.encode(_attestationId, _params.fundsNeeded)));
+        bytes32 _messageId = mailbox.dispatch{value: 0}(
+            KINTO_DOMAIN_ID,
+            addressToBytes32(namiCore),
+            abi.encode(
+                uint8(0),
+                abi.encode(_attestationId, _params.fundsNeeded)
+            )
+        );
 
-        emit CreateDisasterInitiated(_messageId, _attestationId, _params, vaultAddress);
+        emit CreateDisasterInitiated(
+            _messageId,
+            _attestationId,
+            _params,
+            vaultAddress
+        );
         disasterCount += 1;
     }
 
-    function unlockFunds(uint256 _disasterId, UnlockFunds memory _params) external onlyAiAgent {
+    function unlockFunds(
+        uint256 _disasterId,
+        UnlockFunds memory _params,
+        bytes[] memory priceUpdates
+    ) external onlyAiAgent {
         bytes[] memory recipients = new bytes[](2);
         recipients[0] = abi.encode(msg.sender);
         recipients[1] = abi.encode(_params.beneficiaryAddress);
 
-        uint fee = priceOracle.getUpdateFee(_params.priceUpdates);
-        priceOracle.updatePriceFeeds{ value: fee }(_params.priceUpdates);
+        uint fee = priceOracle.getUpdateFee(priceUpdates);
+        priceOracle.updatePriceFeeds{value: fee}(priceUpdates);
 
         uint256 _totalUsdAmount = getUSDAmount(_params.claims, 60);
 
-        bytes memory data = abi.encode(_params.beneficiaryName, _totalUsdAmount, _params.comments, _params.beneficiaryAddress);
+        bytes memory data = abi.encode(
+            _params.beneficiaryName,
+            _totalUsdAmount,
+            _params.comments,
+            _params.beneficiaryAddress
+        );
+
         Attestation memory a = Attestation({
-                schemaId: unlockFundsSchemaId,
-                linkedAttestationId: disasterIdToAttestationId[_disasterId],
-                attestTimestamp: 0,
-                revokeTimestamp: 0,
-                attester: address(this),
-                validUntil: 0,
-                dataLocation: DataLocation.ONCHAIN,
-                revoked: false,
-                recipients: recipients,
-                data: data 
-            });
+            schemaId: unlockFundsSchemaId,
+            linkedAttestationId: disasterIdToAttestationId[_disasterId],
+            attestTimestamp: 0,
+            revokeTimestamp: 0,
+            attester: address(this),
+            validUntil: 0,
+            dataLocation: DataLocation.ONCHAIN,
+            revoked: false,
+            recipients: recipients,
+            data: data
+        });
         uint64 _attestationId = spInstance.attest(a, "", "", "");
-        bytes32 _messageId = mailbox.dispatch{value: 0}(KINTO_DOMAIN_ID, addressToBytes32(namiCore), abi.encode(uint8(1), abi.encode(_attestationId, _disasterId, _params.beneficiaryAddress, _params.claims, _totalUsdAmount)));
+        bytes32 _messageId = mailbox.dispatch{value: 0}(
+            KINTO_DOMAIN_ID,
+            addressToBytes32(namiCore),
+            abi.encode(
+                uint8(1),
+                abi.encode(
+                    _attestationId,
+                    _disasterId,
+                    _params.beneficiaryAddress,
+                    _params.claims,
+                    _totalUsdAmount
+                )
+            )
+        );
 
-        emit UnlockFundsInitiated(_messageId, _disasterId, _attestationId, _params, _totalUsdAmount);
+        emit UnlockFundsInitiated(
+            _messageId,
+            _disasterId,
+            _attestationId,
+            _params,
+            _totalUsdAmount
+        );
+    }
 
-    }  
-
-    function getUSDAmount(Claim[] memory _claims, uint256 olderThan) public view returns(uint256 _usdAmount){
+    function getUSDAmount(
+        Claim[] memory _claims,
+        uint256 olderThan
+    ) public view returns (uint256 _usdAmount) {
         _usdAmount = 0;
 
-        uint256 nativeUsdPrice;
-        uint256 wethUsdPrice;
-        uint256 usdcUsdPrice;
-        uint256 usdtUsdPrice;
+        uint256 nativeUsdPrice = formatToUsdInWei(
+            priceOracle.getPriceNoOlderThan(priceFeedIds[0], olderThan)
+        );
+        uint256 wethUsdPrice = formatToUsdInWei(
+            priceOracle.getPriceNoOlderThan(priceFeedIds[1], olderThan)
+        );
+        uint256 usdcUsdPrice = formatToUsdInWei(
+            priceOracle.getPriceNoOlderThan(priceFeedIds[2], olderThan)
+        );
+        uint256 usdtUsdPrice = formatToUsdInWei(
+            priceOracle.getPriceNoOlderThan(priceFeedIds[3], olderThan)
+        );
 
-        for(uint8 i=0; i < _claims.length; i++) {
-            for(uint8 j=0; j < _claims[i].tokens.length; j++) {
-                if(_claims[i].tokens[j] == 0)
-                {
-                    if(nativeUsdPrice == 0) nativeUsdPrice = formatToUsdInWei(priceOracle.getPriceNoOlderThan(priceFeedIds[0], olderThan));
-                    _usdAmount += (_claims[i].amounts[j] * nativeUsdPrice) / (10 ** 18);
-                } 
-                else if(_claims[i].tokens[j] == 1) {
-                    if(wethUsdPrice == 0) wethUsdPrice = formatToUsdInWei(priceOracle.getPriceNoOlderThan(priceFeedIds[1], olderThan));
-                    _usdAmount += (_claims[i].amounts[j] * wethUsdPrice) / (10 ** 18);
-                } 
-                else if(_claims[i].tokens[j] == 2) {
-                    if(usdcUsdPrice == 0) usdcUsdPrice = formatToUsdInWei(priceOracle.getPriceNoOlderThan(priceFeedIds[2], olderThan));
-                    _usdAmount += (_claims[i].amounts[j] * usdcUsdPrice) / (10 ** 18);
-                } 
-                else if(_claims[i].tokens[j] == 3) {
-                    if(usdtUsdPrice == 0) usdtUsdPrice = formatToUsdInWei(priceOracle.getPriceNoOlderThan(priceFeedIds[3], olderThan));
-                    _usdAmount += (_claims[i].amounts[j] * usdtUsdPrice) / (10 ** 18);
-                }
-            }
+        for (uint8 i = 0; i < _claims.length; i++) {
+            if (_claims[i].ethAmount > 0)
+                _usdAmount +=
+                    (_claims[i].ethAmount * nativeUsdPrice) /
+                    (10 ** 18);
+            if (_claims[i].wethAmount > 0)
+                _usdAmount +=
+                    (_claims[i].wethAmount * wethUsdPrice) /
+                    (10 ** 18);
+            if (_claims[i].usdcAmount > 0)
+                _usdAmount +=
+                    (_claims[i].usdcAmount * usdcUsdPrice) /
+                    (10 ** 18);
+            if (_claims[i].usdtAmount > 0)
+                _usdAmount +=
+                    (_claims[i].usdtAmount * usdtUsdPrice) /
+                    (10 ** 18);
         }
     }
 
-    function formatToUsdInWei(PythStructs.Price memory _priceData) public pure returns(uint256){
-        uint256 absPrice = uint256(int256(_priceData.price < 0 ? -_priceData.price : _priceData.price));
+    function formatToUsdInWei(
+        PythStructs.Price memory _priceData
+    ) public pure returns (uint256) {
+        uint256 absPrice = uint256(
+            int256(_priceData.price < 0 ? -_priceData.price : _priceData.price)
+        );
         uint256 priceInWei = absPrice * 10 ** 18;
 
-        uint256 absExpo = uint256(int256(_priceData.expo < 0 ? -_priceData.expo : _priceData.expo));
+        uint256 absExpo = uint256(
+            int256(_priceData.expo < 0 ? -_priceData.expo : _priceData.expo)
+        );
         return uint256(priceInWei / 10 ** absExpo);
     }
 
@@ -209,8 +287,9 @@ contract NamiAiClient {
         return bytes32(uint256(uint160(_address)));
     }
 
-    function getVaultAddress(uint256 _disasterId) public view returns (address) {
+    function getVaultAddress(
+        uint256 _disasterId
+    ) public view returns (address) {
         return IVaultFactory(vaultFactory).getVaultAddress(_disasterId);
     }
-
 }
