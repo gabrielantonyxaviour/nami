@@ -1,4 +1,8 @@
-const { networks, priceFeedIds } = require("../../networks");
+const {
+  networks,
+  priceFeedIds,
+  namiMpcWalletAddress,
+} = require("../../networks");
 
 task("deploy-client", "Deploys the NamiAiClient contract")
   .addOptionalParam(
@@ -17,17 +21,16 @@ task("deploy-client", "Deploys the NamiAiClient contract")
       "NamiAiClient"
     );
 
-    // TODO: Change to Kinto
     const args = [
       [
         networks.baseSepolia.mailbox,
         networks.baseSepolia.isp,
-        networks.baseSepolia.pythOracle,
+        networks.baseSepolia.pythFeed,
         priceFeedIds,
         networks.baseSepolia.createDisasterSchemaId,
         networks.baseSepolia.fundDisasterSchemaId,
-        networks.polygonAmoy.core, // TODO: Change to Kinto
-        "0x0429A2Da7884CA14E53142988D5845952fE4DF6a", // TODO: Change to Nami MPC Wallet
+        networks.kinto.core,
+        namiMpcWalletAddress,
       ],
     ];
 
