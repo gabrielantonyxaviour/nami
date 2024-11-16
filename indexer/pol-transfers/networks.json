@@ -1,0 +1,16 @@
+{
+  "polygon-amoy": {
+    "WETH": {
+      "address": "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66",
+      "startBlock": 14488460
+    },
+    "USDC": {
+      "address": "0xD4171D5a25B3A684d1952Dd8141fA27911004f12",
+      "startBlock": 14488460
+    },
+    "USDT": {
+      "address": "0x79E72dCc5beEE7F288c7e73C5052FEEBb9C491d9",
+      "startBlock": 14488460
+    }
+  }
+}

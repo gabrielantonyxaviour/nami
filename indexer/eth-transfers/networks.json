@@ -2,15 +2,15 @@
   "sepolia": {
     "WETH": {
       "address": "0xf9F24Ca70e087CA30D8A1AB45c0cd502A2B3B370",
-      "startBlock": 7076070
+      "startBlock": 7087364
     },
     "USDC": {
       "address": "0x04D99018f10F500427c76dab28752f04d93c6389",
-      "startBlock": 7076070
+      "startBlock": 7087364
     },
     "USDT": {
       "address": "0xE9EA89276C4CB5945BB65F8b264fbDF7235E6Da9",
-      "startBlock": 7076070
+      "startBlock": 7087364
     }
   }
 }

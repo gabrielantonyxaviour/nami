@@ -1,0 +1,75 @@
+type token @entity {
+  "token contract address"
+  id: ID!
+
+  "token name"
+  name: String!
+
+  "token symbol"
+  symbol: String!
+
+  "all transfers of this token"
+  transfers: [transfer!]! @derivedFrom(field: "token")
+}
+
+type account @entity {
+  "account address"
+  id: ID!
+  "transfers where this account is the sender"
+  transfersOut: [transfer!]! @derivedFrom(field: "from")
+  "transfers where this account is the receiver"
+  transfersIn: [transfer!]! @derivedFrom(field: "to")
+  "balances for each token"
+  balances: [balance!]! @derivedFrom(field: "account")
+}
+
+type balance @entity {
+  "account address + token address"
+  id: ID!
+  "the account that holds the balance"
+  account: account!
+  "the token"
+  token: token!
+  "the vault if this balance belongs to one"
+  vault: vault
+  "current balance"
+  amount: BigInt!
+  "block number of last update"
+  lastUpdateBlock: BigInt!
+  "timestamp of last update"
+  lastUpdateTimestamp: BigInt!
+}
+
+type transfer @entity {
+  "transaction hash + log index"
+  id: ID!
+  "the token being transferred"
+  token: token!
+  "sender address"
+  from: account!
+  "receiver address"
+  to: account!
+  "vault if this is a vault deposit"
+  vault: vault
+  "amount transferred"
+  amount: BigInt!
+  "block number"
+  blockNumber: BigInt!
+  "block timestamp"
+  timestamp: BigInt!
+  "transaction hash"
+  transactionHash: Bytes!
+}
+
+type vault @entity {
+  "vault address"
+  id: ID!
+  "deposits received by this vault"
+  deposits: [transfer!]! @derivedFrom(field: "vault")
+  "total value locked in vault per token"
+  tokenBalances: [balance!]! @derivedFrom(field: "vault")
+  "total number of depositors"
+  totalDepositors: BigInt!
+  "total value locked across all tokens"
+  totalValueLocked: BigInt!
+}

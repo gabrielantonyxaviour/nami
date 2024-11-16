@@ -1,0 +1,16 @@
+{
+  "scroll-sepolia": {
+    "WETH": {
+      "address": "0x582384603173D650D634c52dD37771cFE439A888",
+      "startBlock": 7301298
+    },
+    "USDC": {
+      "address": "0xdE6d2CaE1BA329c0a09c21Ac6Aa5958A7d355971",
+      "startBlock": 7301298
+    },
+    "USDT": {
+      "address": "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66",
+      "startBlock": 7301298
+    }
+  }
+}

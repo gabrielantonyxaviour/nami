@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: WETH
-    network: base-sepolia
+    network: polygon-amoy
     source:
       abi: WETH
-      address: "0xBE3D118760d9be86688D88929c2122cEc9Ec4635"
-      startBlock: 17986940
+      address: "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66"
+      startBlock: 14488460
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -26,11 +26,11 @@ dataSources:
       file: ./src/token.ts
   - kind: ethereum
     name: USDC
-    network: base-sepolia
+    network: polygon-amoy
     source:
       abi: USDC
-      address: "0x4393eD225A2F48C27eA6CeBec139190cb8EA8A5F"
-      startBlock: 17986940
+      address: "0xD4171D5a25B3A684d1952Dd8141fA27911004f12"
+      startBlock: 14488460
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -46,11 +46,11 @@ dataSources:
       file: ./src/token.ts
   - kind: ethereum
     name: USDT
-    network: base-sepolia
+    network: polygon-amoy
     source:
       abi: USDT
-      address: "0x9FafD4cB45410a931b538F1D97EFCC28b147E449"
-      startBlock: 17986940
+      address: "0x79E72dCc5beEE7F288c7e73C5052FEEBb9C491d9"
+      startBlock: 14488460
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
