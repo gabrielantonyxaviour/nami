@@ -23,7 +23,6 @@ contract NamiVaultFactory {
     uint256 public KINTO_CHAIN_ID = 7887;
 
     address[3] public tokenAddresses;
-
     mapping(uint256 => address) public vaults;
 
     event FundsClaimed(address vault, address beneficiary, uint256 ethAmount, uint256 wethAmount, uint256 usdcAmount, uint256 usdtAmount);
@@ -96,7 +95,7 @@ contract NamiVaultFactory {
         return bytes32(uint256(uint160(_address)));
     }
 
-    function getVaultAddress(uint256 _disasterId) external view returns (address) {
+    function getVaultAddress(uint256 _disasterId) public view returns (address) {
         bytes memory bytecode = type(NamiVault).creationCode;
         return Create2.computeAddress(bytes32(_disasterId), keccak256(bytecode));
     }

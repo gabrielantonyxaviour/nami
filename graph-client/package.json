@@ -2,7 +2,8 @@
   "scripts": {
     "start": "ts-node index.ts --transpileOnly",
     "codegen": "graphclient build",
-    "dev": "graphclient serve-dev"
+    "dev": "graphclient serve-dev",
+    "prod": "graphclient serve-prod"
   },
   "dependencies": {
     "ts-node": "^10.9.2"

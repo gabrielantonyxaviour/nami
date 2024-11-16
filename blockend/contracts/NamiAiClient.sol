@@ -7,11 +7,9 @@ import "@openzeppelin/contracts/utils/Create2.sol";
 
 import "./hyperlane/Structs.sol";
 import "./hyperlane/IMailbox.sol";
-import "./NamiVault.sol";
 import { ISP } from "@ethsign/sign-protocol-evm/src/interfaces/ISP.sol";
 import { Attestation } from "@ethsign/sign-protocol-evm/src/models/Attestation.sol";
 import { DataLocation } from "@ethsign/sign-protocol-evm/src/models/DataLocation.sol";
-
 
 error InsufficientBetAmount(uint256 betAmount, uint256 requiredAmount);
 error NotAIAgent();
@@ -28,6 +26,7 @@ contract NamiAiClient {
         uint64 unlockFundsSchemaId;
         address testingCore;
         address testingAiAgent;
+        address vaultFactory;
     }
 
     struct Disaster {
@@ -36,7 +35,6 @@ contract NamiAiClient {
         string disasterType;
         string location;
         uint256 fundsNeeded;
-        address vaultAddress;
         string ensName;
         string baseName;
     }
@@ -91,7 +89,7 @@ contract NamiAiClient {
         _;
     }
 
-    event CreateDisasterInitiated(bytes32 messageId, uint64 attestationId, Disaster disaster);
+    event CreateDisasterInitiated(bytes32 messageId, uint64 attestationId, Disaster disaster, address vaultAddress);
     event UnlockFundsInitiated(bytes32 messageId, uint256 disasterId, uint64 attestationId, UnlockFunds unlockFunds, uint256 totalAmountInUsd);
 
     function allowlistAiAgent(address aiAgent) external onlyOwner {
@@ -105,9 +103,11 @@ contract NamiAiClient {
 
     function createDisaster(Disaster memory _params) external onlyAiAgent {
         bytes[] memory recipients = new bytes[](1);
-        recipients[0] = abi.encode(msg.sender);
+        recipients[0] = abi.encode(msg.sender); 
 
-        bytes memory data = abi.encode(_params.name, _params.description, _params.disasterType, _params.location, block.timestamp, _params.fundsNeeded, _params.vaultAddress, _params.ensName, _params.baseName);
+        address vaultAddress = getVaultAddress(disasterCount);
+
+        bytes memory data = abi.encode(_params.name, _params.description, _params.disasterType, _params.location, block.timestamp, _params.fundsNeeded, vaultAddress, _params.ensName, _params.baseName);
         Attestation memory a = Attestation({
                 schemaId: createDisasterSchemaId,
                 linkedAttestationId: 0,
@@ -125,7 +125,7 @@ contract NamiAiClient {
         disasterIdToAttestationId[disasterCount] = _attestationId;
         bytes32 _messageId = mailbox.dispatch{value: 0}(KINTO_DOMAIN_ID, addressToBytes32(testingCore), abi.encode(uint8(0), abi.encode(_attestationId, _params.fundsNeeded)));
 
-        emit CreateDisasterInitiated(_messageId, _attestationId, _params);
+        emit CreateDisasterInitiated(_messageId, _attestationId, _params, vaultAddress);
         disasterCount += 1;
     }
 
@@ -206,9 +206,8 @@ contract NamiAiClient {
         return bytes32(uint256(uint160(_address)));
     }
 
-    function getVaultAddress(uint256 _disasterId) external view returns (address) {
-        bytes memory bytecode = type(NamiVault).creationCode;
-        return Create2.computeAddress(bytes32(_disasterId), keccak256(bytecode));
+    function getVaultAddress(uint256 _disasterId) public view returns (address) {
+        return IVaultFactory(_vaultFactory).getVaultAddress(_disasterId);
     }
 
 }
