@@ -11,9 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent } from "../ui/card";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { disasters } from "@/lib/constants";
+import { disasters, GET_DISASTERS_QUERY, graphClient } from "@/lib/constants";
 import Disaster from "./disaster";
 import {
   sortDisastersByCreatedAtAsc,
@@ -25,10 +24,25 @@ import {
 export default function Disasters() {
   const [sort, setSort] = useState("date");
   const [order, setOrder] = useState("desc");
+  const [subgraphData, setSubgraphData] = useState([]);
   const [focusedCoordinates, setFocusedCoordinates] = useState<{
     lat: number;
     lng: number;
   }>({ lat: 35.6762, lng: 15.8917 });
+
+  useEffect(() => {
+    (async function () {
+      const data = await graphClient.query({
+        query: GET_DISASTERS_QUERY,
+        variables: {
+          orderBy: sort,
+          orderDirection: order,
+        },
+      });
+      console.log(data);
+      setSubgraphData(data.data.disasters);
+    })();
+  }, [sort, order]);
 
   const currentDisasters = useMemo(() => {
     if (sort === "date" && order === "asc") {

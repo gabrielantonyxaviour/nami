@@ -1,7 +1,9 @@
+"use client";
 import Image from "next/image";
 import Hero from "./hero";
 import { buttonVariants } from "../ui/button";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Home() {
   return (

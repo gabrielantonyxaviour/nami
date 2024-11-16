@@ -2,6 +2,7 @@
 // import { Agent, Chain } from "./type";
 
 import { Chain, defineChain, zeroAddress } from "viem";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { Disaster, Token } from "./type";
 import {
   baseSepolia,
@@ -333,3 +334,241 @@ export const disasters: Disaster[] = [
     subName: "typhoon.nami.eth",
   },
 ];
+
+export const GRAPH_CLIENT_URL = "http://127.0.0.1:4000/graphql";
+
+export const GET_BALANCES_QUERY = gql`
+  query GetBalances($address: String!) {
+    kintoBalances(where: { account_contains: $address }) {
+      amount
+      token {
+        id
+        symbol
+      }
+    }
+    polBalances(where: { account_contains: $address }) {
+      amount
+      token {
+        id
+        symbol
+      }
+    }
+    ethBalances(where: { account_contains: $address }) {
+      amount
+      token {
+        id
+        symbol
+      }
+    }
+    scrollBalances(where: { account_contains: $address }) {
+      amount
+      token {
+        id
+        symbol
+      }
+    }
+    baseBalances(where: { account_contains: $address }) {
+      amount
+      token {
+        id
+        symbol
+      }
+    }
+  }
+`;
+
+export const GET_DISASTERS_BY_ADDRESS_QUERY = gql`
+  query GetDisasterByAddress(
+    $vault: Bytes!
+    $to: String!
+    $tokenSymbol: String
+    $chain: String
+    $baseOrderBy: baseTransfer_orderBy
+    $polygonOrderBy: polTransfer_orderBy
+    $ethereumOrderBy: ethTransfer_orderBy
+    $kintoOrderBy: kintoTransfer_orderBy
+    $scrollOrderBy: scrollTransfer_orderBy
+    $orderDirection: OrderDirection
+  ) {
+    disasterDescriptives(where: { vaultAddress: $vault }) {
+      id
+      name
+      description
+      disasterType
+      location
+      createdAt
+      fundsNeeded
+      ensName
+      baseName
+      vaultAddress
+      attestationId
+      transactionHash
+      hyperlaneMessageId
+      totalFundsReleased
+      totalBeneficiaries
+      fundReleases {
+        id
+        beneficiary {
+          id
+          name
+          totalAmountReceived
+        }
+        attestationId
+        comments
+        amountInUSD
+        hyperlaneMessageId
+        transactionHash
+        claims {
+          chainId
+          tokens
+          amounts
+        }
+      }
+    }
+
+    baseTransfers(
+      where: { to: $to }
+      orderBy: $baseOrderBy
+      orderDirection: $orderDirection
+    ) {
+      id
+      token {
+        id
+        name
+        symbol
+      }
+      from {
+        id
+      }
+      to {
+        id
+      }
+      amount
+      blockNumber
+      timestamp
+      transactionHash
+    }
+
+    ethTransfers(
+      where: { to: $to }
+      orderBy: $ethereumOrderBy
+      orderDirection: $orderDirection
+    ) {
+      id
+      token {
+        id
+        name
+        symbol
+      }
+      from {
+        id
+      }
+      to {
+        id
+      }
+      amount
+      blockNumber
+      timestamp
+      transactionHash
+    }
+
+    polTransfers(
+      where: { to: $to }
+      orderBy: $polygonOrderBy
+      orderDirection: $orderDirection
+    ) {
+      id
+      token {
+        id
+        name
+        symbol
+      }
+      from {
+        id
+      }
+      to {
+        id
+      }
+      amount
+      blockNumber
+      timestamp
+      transactionHash
+    }
+
+    kintoTransfers(
+      where: { to: $to }
+      orderBy: $kintoOrderBy
+      orderDirection: $orderDirection
+    ) {
+      id
+      token {
+        id
+        name
+        symbol
+      }
+      from {
+        id
+      }
+      to {
+        id
+      }
+      amount
+      blockNumber
+      timestamp
+      transactionHash
+    }
+
+    scrollTransfers(
+      where: { to: $to }
+      orderBy: $scrollOrderBy
+      orderDirection: $orderDirection
+    ) {
+      id
+      token {
+        id
+        name
+        symbol
+      }
+      from {
+        id
+      }
+      to {
+        id
+      }
+      amount
+      blockNumber
+      timestamp
+      transactionHash
+    }
+  }
+`;
+
+export const GET_DISASTERS_QUERY = gql`
+  query (
+    $orderBy: disasterDescriptive_orderBy!
+    $orderDirection: OrderDirection!
+  ) {
+    disasters {
+      id
+      transactionHash
+      totalFundingAmount
+    }
+    disasterDescriptives(orderBy: $orderBy, orderDirection: $orderDirection) {
+      id
+      name
+      description
+      disasterType
+      location
+      createdAt
+      fundsNeeded
+      attestationId
+      hyperlaneMessageId
+      transactionHash
+    }
+  }
+`;
+
+export const graphClient = new ApolloClient({
+  uri: GRAPH_CLIENT_URL,
+  cache: new InMemoryCache(),
+});

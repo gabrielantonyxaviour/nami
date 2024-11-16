@@ -1,19 +1,40 @@
 "use client";
 
-import { disasters } from "@/lib/constants";
+import {
+  disasters,
+  GET_DISASTERS_BY_ADDRESS_QUERY,
+  GET_DISASTERS_QUERY,
+  graphClient,
+} from "@/lib/constants";
 import Image from "next/image";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import DonateHero from "./hero";
 import DonateBody from "./body";
 import DonationTable from "./donations-table";
 
 import SwapModal from "./swap-modal";
+import { gql } from "@apollo/client";
 
 export default function Donate({ id }: { id: string }) {
   const disaster = disasters.find((disaster) => disaster.id === parseInt(id));
   const [showSwapModalPopover, setShowSwapModalPopover] = useState(false);
+  const [donationData, setDonationData] = useState([]);
+
+  useEffect(() => {
+    (async function () {
+      const data = await graphClient.query({
+        query: GET_DISASTERS_BY_ADDRESS_QUERY,
+        variables: {
+          vault: id, // TODO: Change this to disasterId
+          to: id,
+        },
+      });
+      console.log(data);
+      setDonationData(data.data.disasters);
+    })();
+  }, [id]);
 
   return disaster ? (
     <div className="w-[1000px] h-full mx-auto pt-6">
