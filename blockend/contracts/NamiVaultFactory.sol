@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Create2.sol";
 import "./hyperlane/Structs.sol";
 import "./hyperlane/IMailbox.sol";
 import "./NamiVault.sol";
-import "./interface/IVault.sol"; 
+import "./interface/IVault.sol";
 
 error NotAuthorizedCaller(address caller);
 error CannotPerformOperationOnThisChain();
@@ -15,7 +15,6 @@ error VaultDoesNotExist(address vault);
 error InvalidSenderChain(uint32 _origin);
 
 contract NamiVaultFactory {
-
     bool public initialized;
 
     IMailbox public mailbox;
@@ -24,67 +23,176 @@ contract NamiVaultFactory {
 
     address[3] public tokenAddresses;
     mapping(uint256 => address) public vaults;
+    address public owner;
 
-    event FundsClaimed(address vault, address beneficiary, uint256 ethAmount, uint256 wethAmount, uint256 usdcAmount, uint256 usdtAmount);
+    event FundsClaimed(
+        address vault,
+        address beneficiary,
+        uint256 ethAmount,
+        uint256 wethAmount,
+        uint256 usdcAmount,
+        uint256 usdtAmount
+    );
 
-    modifier onlyOnce(){
-        if(initialized) revert AlreadyInitialized();
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOnce() {
+        if (initialized) revert AlreadyInitialized();
         _;
     }
 
-    modifier onlyAllowed(address _crosschainCaller){
-        if(block.chainid == KINTO_CHAIN_ID)
-        {
-            if(msg.sender != authorizedCaller) revert NotAuthorizedCaller(msg.sender);
+    modifier onlyAllowed(address _crosschainCaller) {
+        if (block.chainid == KINTO_CHAIN_ID) {
+            if (msg.sender != authorizedCaller)
+                revert NotAuthorizedCaller(msg.sender);
         } else {
-            if(msg.sender != address(mailbox) || _crosschainCaller != authorizedCaller) revert NotAuthorizedCaller(msg.sender);
+            if (
+                msg.sender != address(mailbox) ||
+                _crosschainCaller != authorizedCaller
+            ) revert NotAuthorizedCaller(msg.sender);
         }
         _;
     }
 
-    modifier onlyKinto(){
-        if(block.chainid != KINTO_CHAIN_ID) revert CannotPerformOperationOnThisChain();
+    modifier onlyKinto() {
+        if (block.chainid != KINTO_CHAIN_ID)
+            revert CannotPerformOperationOnThisChain();
         _;
     }
-    
-    function initialize(address _mailbox, address _authorizedCaller, address[3] memory _tokens) public onlyOnce {
+
+    modifier onlyOwner() {
+        if (msg.sender != owner) revert NotAuthorizedCaller(msg.sender);
+        _;
+    }
+
+    function initialize(
+        address _mailbox,
+        address _authorizedCaller,
+        address[3] memory _tokens
+    ) public onlyOnce {
         mailbox = IMailbox(_mailbox);
         authorizedCaller = _authorizedCaller;
         tokenAddresses = _tokens;
         initialized = true;
     }
 
-    function _createVault(uint256 salt) internal returns(address deployed) {
+    function setAuthorizedCaller(address _authorizedCaller) public {
+        authorizedCaller = _authorizedCaller;
+    }
+
+    function _createVault(uint256 salt) internal returns (address deployed) {
         bytes memory bytecode = type(NamiVault).creationCode;
         deployed = Create2.deploy(0, bytes32(salt), bytecode);
-        vaults[salt] = deployed; 
+        vaults[salt] = deployed;
         IVault(deployed).initialize(address(this), tokenAddresses);
     }
 
-    function createVault(uint256 salt) external onlyAllowed(msg.sender) returns(address deployed) {
-        deployed = _createVault(salt);  
+    function createVault(
+        uint256 salt
+    ) external onlyAllowed(msg.sender) returns (address deployed) {
+        deployed = _createVault(salt);
     }
 
-    function _createVaultAndClaimFunds(uint256 salt, address _beneficiary,  uint256 ethAmount, uint256 wethAmount, uint256 usdcAmount, uint256 usdtAmount) internal {
+    function _createVaultAndClaimFunds(
+        uint256 salt,
+        address _beneficiary,
+        uint256 ethAmount,
+        uint256 wethAmount,
+        uint256 usdcAmount,
+        uint256 usdtAmount
+    ) internal {
         _createVault(salt);
-        _claimFunds(vaults[salt], _beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);
+        _claimFunds(
+            vaults[salt],
+            _beneficiary,
+            ethAmount,
+            wethAmount,
+            usdcAmount,
+            usdtAmount
+        );
     }
 
-    function claimFunds(uint256 _disasterId, address _beneficiary, uint256 ethAmount, uint256 wethAmount, uint256 usdcAmount, uint256 usdtAmount) external onlyAllowed(msg.sender) {
-        _claimFunds(vaults[_disasterId], _beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);
+    function claimFunds(
+        uint256 _disasterId,
+        address _beneficiary,
+        uint256 ethAmount,
+        uint256 wethAmount,
+        uint256 usdcAmount,
+        uint256 usdtAmount
+    ) external onlyAllowed(msg.sender) {
+        _claimFunds(
+            vaults[_disasterId],
+            _beneficiary,
+            ethAmount,
+            wethAmount,
+            usdcAmount,
+            usdtAmount
+        );
     }
 
-    function _claimFunds(address _vault, address _beneficiary,  uint256 ethAmount, uint256 wethAmount, uint256 usdcAmount, uint256 usdtAmount) internal  {
-        if(_vault == address(0)) revert VaultDoesNotExist(_vault);
-        NamiVault(payable(_vault)).withdrawValue(_beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);
-        emit FundsClaimed(_vault, _beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);
+    function _claimFunds(
+        address _vault,
+        address _beneficiary,
+        uint256 ethAmount,
+        uint256 wethAmount,
+        uint256 usdcAmount,
+        uint256 usdtAmount
+    ) internal {
+        if (_vault == address(0)) revert VaultDoesNotExist(_vault);
+        NamiVault(payable(_vault)).withdrawValue(
+            _beneficiary,
+            ethAmount,
+            wethAmount,
+            usdcAmount,
+            usdtAmount
+        );
+        emit FundsClaimed(
+            _vault,
+            _beneficiary,
+            ethAmount,
+            wethAmount,
+            usdcAmount,
+            usdtAmount
+        );
     }
 
-    function handle(uint32 _origin, bytes32 _sender, bytes calldata _data) external payable onlyAllowed(bytes32ToAddress(_sender)) {
-        if(_origin != KINTO_CHAIN_ID) revert InvalidSenderChain(_origin);
-        (uint256 _disasterId, address _beneficiary, uint256 ethAmount, uint256 wethAmount, uint256 usdcAmount, uint256 usdtAmount) = abi.decode(_data, (uint256, address, uint256, uint256, uint256, uint256));
-        if(vaults[_disasterId] == address(0)) _createVaultAndClaimFunds(_disasterId, _beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);  
-        else _claimFunds(vaults[_disasterId], _beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);
+    function handle(
+        uint32 _origin,
+        bytes32 _sender,
+        bytes calldata _data
+    ) external payable onlyAllowed(bytes32ToAddress(_sender)) {
+        if (_origin != KINTO_CHAIN_ID) revert InvalidSenderChain(_origin);
+        (
+            uint256 _disasterId,
+            address _beneficiary,
+            uint256 ethAmount,
+            uint256 wethAmount,
+            uint256 usdcAmount,
+            uint256 usdtAmount
+        ) = abi.decode(
+                _data,
+                (uint256, address, uint256, uint256, uint256, uint256)
+            );
+        if (vaults[_disasterId] == address(0))
+            _createVaultAndClaimFunds(
+                _disasterId,
+                _beneficiary,
+                ethAmount,
+                wethAmount,
+                usdcAmount,
+                usdtAmount
+            );
+        else
+            _claimFunds(
+                vaults[_disasterId],
+                _beneficiary,
+                ethAmount,
+                wethAmount,
+                usdcAmount,
+                usdtAmount
+            );
     }
 
     function bytes32ToAddress(bytes32 _bytes32) public pure returns (address) {
@@ -95,9 +203,11 @@ contract NamiVaultFactory {
         return bytes32(uint256(uint160(_address)));
     }
 
-    function getVaultAddress(uint256 _disasterId) public view returns (address) {
+    function getVaultAddress(
+        uint256 _disasterId
+    ) public view returns (address) {
         bytes memory bytecode = type(NamiVault).creationCode;
-        return Create2.computeAddress(bytes32(_disasterId), keccak256(bytecode));
+        return
+            Create2.computeAddress(bytes32(_disasterId), keccak256(bytecode));
     }
- 
 }
