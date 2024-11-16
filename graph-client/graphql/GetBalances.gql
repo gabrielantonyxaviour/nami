@@ -1,57 +1,37 @@
 query GetBalances($address: String!) {
   kintoBalances(where: { account_contains: $address }) {
-    id
     amount
     token {
       id
       symbol
-    }
-    account {
-      id
     }
   }
   polBalances(where: { account_contains: $address }) {
-    id
     amount
     token {
       id
       symbol
-    }
-    account {
-      id
     }
   }
   ethBalances(where: { account_contains: $address }) {
-    id
     amount
     token {
       id
       symbol
-    }
-    account {
-      id
     }
   }
   scrollBalances(where: { account_contains: $address }) {
-    id
     amount
     token {
       id
       symbol
-    }
-    account {
-      id
     }
   }
   baseBalances(where: { account_contains: $address }) {
-    id
     amount
     token {
       id
       symbol
-    }
-    account {
-      id
     }
   }
 }
