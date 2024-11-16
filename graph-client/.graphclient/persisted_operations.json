@@ -1,0 +1,3 @@
+{
+  "90e2ba83e81fae9dddd1637a8e35b5a00dd1029359e658dc8b342235c059573a": "query GetDisasters {\n  disasters {\n    id\n    attestationId\n    estimatedRequirementInUSD\n    totalFundingAmount\n    transactionHash\n    vaultAddress\n  }\n}"
+}

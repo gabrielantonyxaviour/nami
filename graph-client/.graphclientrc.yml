@@ -1,0 +1,38 @@
+sources:
+  - name: NamiCore
+    handler:
+      graphql:
+        endpoint: http://localhost:8000/subgraphs/name/nami-core
+
+  - name: NamiAiClient
+    handler:
+      graphql:
+        endpoint: https://api.studio.thegraph.com/query/30735/nami-ai-client/version/latest
+
+  - name: KintoTransfers
+    handler:
+      graphql:
+        endpoint: http://localhost:8000/subgraphs/name/kinto-transfers
+
+  - name: PolygonTransfers
+    handler:
+      graphql:
+        endpoint: https://api.studio.thegraph.com/query/30735/polygon-token-transfers/version/latest
+
+  - name: EthereumTransfers
+    handler:
+      graphql:
+        endpoint: https://api.studio.thegraph.com/query/30735/ethereum-token-transfers/version/latest
+
+  - name: BaseTransfers
+    handler:
+      graphql:
+        endpoint: https://api.studio.thegraph.com/query/30735/base-token-transfers/version/latest
+
+  - name: ScrollTransfers
+    handler:
+      graphql:
+        endpoint: https://api.studio.thegraph.com/query/30735/scroll-token-transfers/version/latest
+
+documents:
+  - ./graphql/GetDisasters.gql

@@ -1,0 +1,10 @@
+query GetDisasters {
+  disasters {
+    id
+    attestationId
+    estimatedRequirementInUSD
+    totalFundingAmount
+    transactionHash
+    vaultAddress
+  }
+}
