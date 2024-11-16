@@ -134,6 +134,7 @@ const networks = {
     verifyApiUrl: "https://eth-sepolia.blockscout.com/api",
     mailbox: "0xb2B892c9E8A1137Ae66f508c557a87Fda937FB81",
     vaultFactory: "0x64CCe32fe7AcDBA2566AdDf9eEF16Ba4434c3E34",
+
     tokens: {
       weth: "0xf9F24Ca70e087CA30D8A1AB45c0cd502A2B3B370",
       usdc: "0x04D99018f10F500427c76dab28752f04d93c6389",
