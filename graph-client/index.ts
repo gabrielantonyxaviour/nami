@@ -9,7 +9,9 @@ async function main() {
     polBalances,
     scrollBalances,
     baseBalances,
-  } = await GetBalances();
+  } = await GetBalances({
+    address: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a".toLocaleLowerCase(),
+  });
   console.log({
     ethBalances,
     kintoBalances,

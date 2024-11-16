@@ -22,18 +22,18 @@ import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
 import type { NamiAiClientTypes } from './sources/NamiAiClient/types';
-import type { BaseTransfersTypes } from './sources/BaseTransfers/types';
-import type { KintoTransfersTypes } from './sources/KintoTransfers/types';
 import type { EthereumTransfersTypes } from './sources/EthereumTransfers/types';
-import type { NamiCoreTypes } from './sources/NamiCore/types';
-import type { ScrollTransfersTypes } from './sources/ScrollTransfers/types';
+import type { KintoTransfersTypes } from './sources/KintoTransfers/types';
 import type { PolygonTransfersTypes } from './sources/PolygonTransfers/types';
-import * as importedModule$0 from "./sources/KintoTransfers/introspectionSchema";
-import * as importedModule$1 from "./sources/NamiCore/introspectionSchema";
+import type { BaseTransfersTypes } from './sources/BaseTransfers/types';
+import type { ScrollTransfersTypes } from './sources/ScrollTransfers/types';
+import type { NamiCoreTypes } from './sources/NamiCore/types';
+import * as importedModule$0 from "./sources/NamiCore/introspectionSchema";
+import * as importedModule$1 from "./sources/KintoTransfers/introspectionSchema";
 import * as importedModule$2 from "./sources/PolygonTransfers/introspectionSchema";
 import * as importedModule$3 from "./sources/BaseTransfers/introspectionSchema";
-import * as importedModule$4 from "./sources/ScrollTransfers/introspectionSchema";
-import * as importedModule$5 from "./sources/EthereumTransfers/introspectionSchema";
+import * as importedModule$4 from "./sources/EthereumTransfers/introspectionSchema";
+import * as importedModule$5 from "./sources/ScrollTransfers/introspectionSchema";
 import * as importedModule$6 from "./sources/NamiAiClient/introspectionSchema";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -5815,10 +5815,10 @@ const baseDir = pathModule.join(typeof __dirname === 'string' ? __dirname : '/',
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/KintoTransfers/introspectionSchema":
+    case ".graphclient/sources/NamiCore/introspectionSchema":
       return Promise.resolve(importedModule$0) as T;
     
-    case ".graphclient/sources/NamiCore/introspectionSchema":
+    case ".graphclient/sources/KintoTransfers/introspectionSchema":
       return Promise.resolve(importedModule$1) as T;
     
     case ".graphclient/sources/PolygonTransfers/introspectionSchema":
@@ -5827,10 +5827,10 @@ const importFn: ImportFn = <T>(moduleId: string) => {
     case ".graphclient/sources/BaseTransfers/introspectionSchema":
       return Promise.resolve(importedModule$3) as T;
     
-    case ".graphclient/sources/ScrollTransfers/introspectionSchema":
+    case ".graphclient/sources/EthereumTransfers/introspectionSchema":
       return Promise.resolve(importedModule$4) as T;
     
-    case ".graphclient/sources/EthereumTransfers/introspectionSchema":
+    case ".graphclient/sources/ScrollTransfers/introspectionSchema":
       return Promise.resolve(importedModule$5) as T;
     
     case ".graphclient/sources/NamiAiClient/introspectionSchema":
@@ -5987,7 +5987,7 @@ const merger = new(StitchingMerger as any)({
         store: rootStore.child('stitchingMerger')
       })
 const documentHashMap = {
-        "3f0b8e8860f2d2dbe4595349419b0773856734f32958dcc6e3d91749e4ca5ca7": GetBalancesDocument,
+        "7d7b1587ccbd4956456ff96a7539e7894816ef1b8396cf00ef3a0a83e24c6669": GetBalancesDocument,
 "90e2ba83e81fae9dddd1637a8e35b5a00dd1029359e658dc8b342235c059573a": GetDisastersDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
@@ -6015,7 +6015,7 @@ additionalEnvelopPlugins.push(usePersistedOperations({
           return printWithCache(GetBalancesDocument);
         },
         location: 'GetBalancesDocument.graphql',
-        sha256Hash: '3f0b8e8860f2d2dbe4595349419b0773856734f32958dcc6e3d91749e4ca5ca7'
+        sha256Hash: '7d7b1587ccbd4956456ff96a7539e7894816ef1b8396cf00ef3a0a83e24c6669'
       },{
         document: GetDisastersDocument,
         get rawSDL() {
@@ -6077,24 +6077,26 @@ export function getBuiltGraphSDK<TGlobalContext = any, TOperationContext = any>(
   const sdkRequester$ = getBuiltGraphClient().then(({ sdkRequesterFactory }) => sdkRequesterFactory(globalContext));
   return getSdk<TOperationContext, TGlobalContext>((...args) => sdkRequester$.then(sdkRequester => sdkRequester(...args)));
 }
-export type GetBalancesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetBalancesQueryVariables = Exact<{
+  address: Scalars['String']['input'];
+}>;
 
 
 export type GetBalancesQuery = { kintoBalances: Array<(
     Pick<kintoBalance, 'id' | 'amount'>
-    & { token: Pick<kintoToken, 'id'>, account: Pick<kintoAccount, 'id'> }
+    & { token: Pick<kintoToken, 'id' | 'symbol'>, account: Pick<kintoAccount, 'id'> }
   )>, polBalances: Array<(
     Pick<polBalance, 'id' | 'amount'>
-    & { token: Pick<polToken, 'id'>, account: Pick<polAccount, 'id'> }
+    & { token: Pick<polToken, 'id' | 'symbol'>, account: Pick<polAccount, 'id'> }
   )>, ethBalances: Array<(
     Pick<ethBalance, 'id' | 'amount'>
-    & { token: Pick<ethToken, 'id'>, account: Pick<ethAccount, 'id'> }
+    & { token: Pick<ethToken, 'id' | 'symbol'>, account: Pick<ethAccount, 'id'> }
   )>, scrollBalances: Array<(
     Pick<scrollBalance, 'id' | 'amount'>
-    & { token: Pick<scrollToken, 'id'>, account: Pick<scrollAccount, 'id'> }
+    & { token: Pick<scrollToken, 'id' | 'symbol'>, account: Pick<scrollAccount, 'id'> }
   )>, baseBalances: Array<(
     Pick<baseBalance, 'id' | 'amount'>
-    & { token: Pick<baseToken, 'id'>, account: Pick<baseAccount, 'id'> }
+    & { token: Pick<baseToken, 'id' | 'symbol'>, account: Pick<baseAccount, 'id'> }
   )> };
 
 export type GetDisastersQueryVariables = Exact<{ [key: string]: never; }>;
@@ -6104,86 +6106,57 @@ export type GetDisastersQuery = { disasters: Array<Pick<disaster, 'id' | 'attest
 
 
 export const GetBalancesDocument = gql`
-    query GetBalances {
-  kintoBalances(
-    where: {account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a"}
-  ) {
+    query GetBalances($address: String!) {
+  kintoBalances(where: {account_contains: $address}) {
     id
     amount
     token {
       id
+      symbol
     }
     account {
       id
     }
   }
-  polBalances(
-    where: {account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a"}
-  ) {
+  polBalances(where: {account_contains: $address}) {
     id
     amount
     token {
       id
+      symbol
     }
     account {
       id
     }
   }
-  kintoBalances(
-    where: {account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a"}
-  ) {
+  ethBalances(where: {account_contains: $address}) {
     id
     amount
     token {
       id
+      symbol
     }
     account {
       id
     }
   }
-  polBalances(
-    where: {account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a"}
-  ) {
+  scrollBalances(where: {account_contains: $address}) {
     id
     amount
     token {
       id
+      symbol
     }
     account {
       id
     }
   }
-  ethBalances(
-    where: {account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a"}
-  ) {
+  baseBalances(where: {account_contains: $address}) {
     id
     amount
     token {
       id
-    }
-    account {
-      id
-    }
-  }
-  scrollBalances(
-    where: {account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a"}
-  ) {
-    id
-    amount
-    token {
-      id
-    }
-    account {
-      id
-    }
-  }
-  baseBalances(
-    where: {account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a"}
-  ) {
-    id
-    amount
-    token {
-      id
+      symbol
     }
     account {
       id
@@ -6209,7 +6182,7 @@ export const GetDisastersDocument = gql`
 export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
-    GetBalances(variables?: GetBalancesQueryVariables, options?: C): Promise<GetBalancesQuery> {
+    GetBalances(variables: GetBalancesQueryVariables, options?: C): Promise<GetBalancesQuery> {
       return requester<GetBalancesQuery, GetBalancesQueryVariables>(GetBalancesDocument, variables, options) as Promise<GetBalancesQuery>;
     },
     GetDisasters(variables?: GetDisastersQueryVariables, options?: C): Promise<GetDisastersQuery> {

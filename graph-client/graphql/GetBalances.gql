@@ -1,7 +1,5 @@
-query GetBalances {
-  kintoBalances(
-    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
-  ) {
+query GetBalances($address: String!) {
+  kintoBalances(where: { account_contains: $address }) {
     id
     amount
     token {
@@ -12,9 +10,7 @@ query GetBalances {
       id
     }
   }
-  polBalances(
-    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
-  ) {
+  polBalances(where: { account_contains: $address }) {
     id
     amount
     token {
@@ -25,9 +21,7 @@ query GetBalances {
       id
     }
   }
-  kintoBalances(
-    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
-  ) {
+  ethBalances(where: { account_contains: $address }) {
     id
     amount
     token {
@@ -38,9 +32,7 @@ query GetBalances {
       id
     }
   }
-  polBalances(
-    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
-  ) {
+  scrollBalances(where: { account_contains: $address }) {
     id
     amount
     token {
@@ -51,35 +43,7 @@ query GetBalances {
       id
     }
   }
-  ethBalances(
-    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
-  ) {
-    id
-    amount
-    token {
-      id
-      symbol
-    }
-    account {
-      id
-    }
-  }
-  scrollBalances(
-    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
-  ) {
-    id
-    amount
-    token {
-      id
-      symbol
-    }
-    account {
-      id
-    }
-  }
-  baseBalances(
-    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
-  ) {
+  baseBalances(where: { account_contains: $address }) {
     id
     amount
     token {
