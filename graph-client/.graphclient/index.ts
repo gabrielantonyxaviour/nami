@@ -21,20 +21,20 @@ import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
-import type { EthereumTransfersTypes } from './sources/EthereumTransfers/types';
 import type { NamiCoreTypes } from './sources/NamiCore/types';
 import type { BaseTransfersTypes } from './sources/BaseTransfers/types';
-import type { KintoTransfersTypes } from './sources/KintoTransfers/types';
-import type { PolygonTransfersTypes } from './sources/PolygonTransfers/types';
-import type { NamiAiClientTypes } from './sources/NamiAiClient/types';
 import type { ScrollTransfersTypes } from './sources/ScrollTransfers/types';
-import * as importedModule$0 from "./sources/KintoTransfers/introspectionSchema";
-import * as importedModule$1 from "./sources/NamiCore/introspectionSchema";
+import type { NamiAiClientTypes } from './sources/NamiAiClient/types';
+import type { PolygonTransfersTypes } from './sources/PolygonTransfers/types';
+import type { EthereumTransfersTypes } from './sources/EthereumTransfers/types';
+import type { KintoTransfersTypes } from './sources/KintoTransfers/types';
+import * as importedModule$0 from "./sources/NamiCore/introspectionSchema";
+import * as importedModule$1 from "./sources/KintoTransfers/introspectionSchema";
 import * as importedModule$2 from "./sources/BaseTransfers/introspectionSchema";
-import * as importedModule$3 from "./sources/ScrollTransfers/introspectionSchema";
-import * as importedModule$4 from "./sources/PolygonTransfers/introspectionSchema";
-import * as importedModule$5 from "./sources/NamiAiClient/introspectionSchema";
-import * as importedModule$6 from "./sources/EthereumTransfers/introspectionSchema";
+import * as importedModule$3 from "./sources/PolygonTransfers/introspectionSchema";
+import * as importedModule$4 from "./sources/ScrollTransfers/introspectionSchema";
+import * as importedModule$5 from "./sources/EthereumTransfers/introspectionSchema";
+import * as importedModule$6 from "./sources/NamiAiClient/introspectionSchema";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -5815,25 +5815,25 @@ const baseDir = pathModule.join(typeof __dirname === 'string' ? __dirname : '/',
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/KintoTransfers/introspectionSchema":
+    case ".graphclient/sources/NamiCore/introspectionSchema":
       return Promise.resolve(importedModule$0) as T;
     
-    case ".graphclient/sources/NamiCore/introspectionSchema":
+    case ".graphclient/sources/KintoTransfers/introspectionSchema":
       return Promise.resolve(importedModule$1) as T;
     
     case ".graphclient/sources/BaseTransfers/introspectionSchema":
       return Promise.resolve(importedModule$2) as T;
     
-    case ".graphclient/sources/ScrollTransfers/introspectionSchema":
+    case ".graphclient/sources/PolygonTransfers/introspectionSchema":
       return Promise.resolve(importedModule$3) as T;
     
-    case ".graphclient/sources/PolygonTransfers/introspectionSchema":
+    case ".graphclient/sources/ScrollTransfers/introspectionSchema":
       return Promise.resolve(importedModule$4) as T;
     
-    case ".graphclient/sources/NamiAiClient/introspectionSchema":
+    case ".graphclient/sources/EthereumTransfers/introspectionSchema":
       return Promise.resolve(importedModule$5) as T;
     
-    case ".graphclient/sources/EthereumTransfers/introspectionSchema":
+    case ".graphclient/sources/NamiAiClient/introspectionSchema":
       return Promise.resolve(importedModule$6) as T;
     
     default:
@@ -5988,7 +5988,8 @@ const merger = new(StitchingMerger as any)({
       })
 const documentHashMap = {
         "749505184cd001918180d0783d0b92f8346db57e620524d6e91982753c3d90a0": GetBalancesDocument,
-"90e2ba83e81fae9dddd1637a8e35b5a00dd1029359e658dc8b342235c059573a": GetDisastersDocument
+"68f94a7f16be2d33bbdd4f1634e93ada47916ed05b70a903b7b4411b95838bf5": GetDisasterByAddressDocument,
+"87eddab482c0cc525befa2bd73a8c67c6c8ed11e25f23e09c34a5d5c8a090da6": GetDisastersDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
         getPersistedOperation(key) {
@@ -6017,12 +6018,19 @@ additionalEnvelopPlugins.push(usePersistedOperations({
         location: 'GetBalancesDocument.graphql',
         sha256Hash: '749505184cd001918180d0783d0b92f8346db57e620524d6e91982753c3d90a0'
       },{
+        document: GetDisasterByAddressDocument,
+        get rawSDL() {
+          return printWithCache(GetDisasterByAddressDocument);
+        },
+        location: 'GetDisasterByAddressDocument.graphql',
+        sha256Hash: '68f94a7f16be2d33bbdd4f1634e93ada47916ed05b70a903b7b4411b95838bf5'
+      },{
         document: GetDisastersDocument,
         get rawSDL() {
           return printWithCache(GetDisastersDocument);
         },
         location: 'GetDisastersDocument.graphql',
-        sha256Hash: '90e2ba83e81fae9dddd1637a8e35b5a00dd1029359e658dc8b342235c059573a'
+        sha256Hash: '87eddab482c0cc525befa2bd73a8c67c6c8ed11e25f23e09c34a5d5c8a090da6'
       }
     ];
     },
@@ -6099,10 +6107,50 @@ export type GetBalancesQuery = { kintoBalances: Array<(
     & { token: Pick<baseToken, 'id' | 'symbol'> }
   )> };
 
-export type GetDisastersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetDisasterByAddressQueryVariables = Exact<{
+  vault: Scalars['Bytes']['input'];
+  to: Scalars['String']['input'];
+  tokenSymbol?: InputMaybe<Scalars['String']['input']>;
+  chain?: InputMaybe<Scalars['String']['input']>;
+  baseOrderBy?: InputMaybe<baseTransfer_orderBy>;
+  polygonOrderBy?: InputMaybe<polTransfer_orderBy>;
+  ethereumOrderBy?: InputMaybe<ethTransfer_orderBy>;
+  kintoOrderBy?: InputMaybe<kintoTransfer_orderBy>;
+  scrollOrderBy?: InputMaybe<scrollTransfer_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+}>;
 
 
-export type GetDisastersQuery = { disasters: Array<Pick<disaster, 'id' | 'attestationId' | 'estimatedRequirementInUSD' | 'totalFundingAmount' | 'transactionHash' | 'vaultAddress'>> };
+export type GetDisasterByAddressQuery = { disasterDescriptives: Array<(
+    Pick<disasterDescriptive, 'id' | 'name' | 'description' | 'disasterType' | 'location' | 'createdAt' | 'fundsNeeded' | 'ensName' | 'baseName' | 'vaultAddress' | 'attestationId' | 'transactionHash' | 'hyperlaneMessageId' | 'totalFundsReleased' | 'totalBeneficiaries'>
+    & { fundReleases: Array<(
+      Pick<fundReleaseDescriptive, 'id' | 'attestationId' | 'comments' | 'amountInUSD' | 'hyperlaneMessageId' | 'transactionHash'>
+      & { beneficiary: Pick<beneficiary, 'id' | 'name' | 'totalAmountReceived'>, claims: Array<Pick<claim, 'chainId' | 'tokens' | 'amounts'>> }
+    )> }
+  )>, baseTransfers: Array<(
+    Pick<baseTransfer, 'id' | 'amount' | 'blockNumber' | 'timestamp' | 'transactionHash'>
+    & { token: Pick<baseToken, 'id' | 'name' | 'symbol'>, from: Pick<baseAccount, 'id'>, to: Pick<baseAccount, 'id'> }
+  )>, ethTransfers: Array<(
+    Pick<ethTransfer, 'id' | 'amount' | 'blockNumber' | 'timestamp' | 'transactionHash'>
+    & { token: Pick<ethToken, 'id' | 'name' | 'symbol'>, from: Pick<ethAccount, 'id'>, to: Pick<ethAccount, 'id'> }
+  )>, polTransfers: Array<(
+    Pick<polTransfer, 'id' | 'amount' | 'blockNumber' | 'timestamp' | 'transactionHash'>
+    & { token: Pick<polToken, 'id' | 'name' | 'symbol'>, from: Pick<polAccount, 'id'>, to: Pick<polAccount, 'id'> }
+  )>, kintoTransfers: Array<(
+    Pick<kintoTransfer, 'id' | 'amount' | 'blockNumber' | 'timestamp' | 'transactionHash'>
+    & { token: Pick<kintoToken, 'id' | 'name' | 'symbol'>, from: Pick<kintoAccount, 'id'>, to: Pick<kintoAccount, 'id'> }
+  )>, scrollTransfers: Array<(
+    Pick<scrollTransfer, 'id' | 'amount' | 'blockNumber' | 'timestamp' | 'transactionHash'>
+    & { token: Pick<scrollToken, 'id' | 'name' | 'symbol'>, from: Pick<scrollAccount, 'id'>, to: Pick<scrollAccount, 'id'> }
+  )> };
+
+export type GetDisastersQueryVariables = Exact<{
+  orderBy: disasterDescriptive_orderBy;
+  orderDirection: OrderDirection;
+}>;
+
+
+export type GetDisastersQuery = { disasters: Array<Pick<disaster, 'id' | 'transactionHash' | 'totalFundingAmount'>>, disasterDescriptives: Array<Pick<disasterDescriptive, 'id' | 'name' | 'description' | 'disasterType' | 'location' | 'createdAt' | 'fundsNeeded' | 'attestationId' | 'hyperlaneMessageId' | 'transactionHash'>> };
 
 
 export const GetBalancesDocument = gql`
@@ -6144,18 +6192,177 @@ export const GetBalancesDocument = gql`
   }
 }
     ` as unknown as DocumentNode<GetBalancesQuery, GetBalancesQueryVariables>;
+export const GetDisasterByAddressDocument = gql`
+    query GetDisasterByAddress($vault: Bytes!, $to: String!, $tokenSymbol: String, $chain: String, $baseOrderBy: baseTransfer_orderBy, $polygonOrderBy: polTransfer_orderBy, $ethereumOrderBy: ethTransfer_orderBy, $kintoOrderBy: kintoTransfer_orderBy, $scrollOrderBy: scrollTransfer_orderBy, $orderDirection: OrderDirection) {
+  disasterDescriptives(where: {vaultAddress: $vault}) {
+    id
+    name
+    description
+    disasterType
+    location
+    createdAt
+    fundsNeeded
+    ensName
+    baseName
+    vaultAddress
+    attestationId
+    transactionHash
+    hyperlaneMessageId
+    totalFundsReleased
+    totalBeneficiaries
+    fundReleases {
+      id
+      beneficiary {
+        id
+        name
+        totalAmountReceived
+      }
+      attestationId
+      comments
+      amountInUSD
+      hyperlaneMessageId
+      transactionHash
+      claims {
+        chainId
+        tokens
+        amounts
+      }
+    }
+  }
+  baseTransfers(
+    where: {to: $to}
+    orderBy: $baseOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+  ethTransfers(
+    where: {to: $to}
+    orderBy: $ethereumOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+  polTransfers(
+    where: {to: $to}
+    orderBy: $polygonOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+  kintoTransfers(
+    where: {to: $to}
+    orderBy: $kintoOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+  scrollTransfers(
+    where: {to: $to}
+    orderBy: $scrollOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+}
+    ` as unknown as DocumentNode<GetDisasterByAddressQuery, GetDisasterByAddressQueryVariables>;
 export const GetDisastersDocument = gql`
-    query GetDisasters {
+    query GetDisasters($orderBy: disasterDescriptive_orderBy!, $orderDirection: OrderDirection!) {
   disasters {
     id
-    attestationId
-    estimatedRequirementInUSD
-    totalFundingAmount
     transactionHash
-    vaultAddress
+    totalFundingAmount
+  }
+  disasterDescriptives(orderBy: $orderBy, orderDirection: $orderDirection) {
+    id
+    name
+    description
+    disasterType
+    location
+    createdAt
+    fundsNeeded
+    attestationId
+    hyperlaneMessageId
+    transactionHash
   }
 }
     ` as unknown as DocumentNode<GetDisastersQuery, GetDisastersQueryVariables>;
+
 
 
 
@@ -6165,7 +6372,10 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     GetBalances(variables: GetBalancesQueryVariables, options?: C): Promise<GetBalancesQuery> {
       return requester<GetBalancesQuery, GetBalancesQueryVariables>(GetBalancesDocument, variables, options) as Promise<GetBalancesQuery>;
     },
-    GetDisasters(variables?: GetDisastersQueryVariables, options?: C): Promise<GetDisastersQuery> {
+    GetDisasterByAddress(variables: GetDisasterByAddressQueryVariables, options?: C): Promise<GetDisasterByAddressQuery> {
+      return requester<GetDisasterByAddressQuery, GetDisasterByAddressQueryVariables>(GetDisasterByAddressDocument, variables, options) as Promise<GetDisasterByAddressQuery>;
+    },
+    GetDisasters(variables: GetDisastersQueryVariables, options?: C): Promise<GetDisastersQuery> {
       return requester<GetDisastersQuery, GetDisastersQueryVariables>(GetDisastersDocument, variables, options) as Promise<GetDisastersQuery>;
     }
   };

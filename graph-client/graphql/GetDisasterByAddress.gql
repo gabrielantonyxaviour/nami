@@ -1,0 +1,163 @@
+query GetDisasterByAddress(
+  $vault: Bytes!
+  $to: String!
+  $tokenSymbol: String
+  $chain: String
+  $baseOrderBy: baseTransfer_orderBy
+  $polygonOrderBy: polTransfer_orderBy
+  $ethereumOrderBy: ethTransfer_orderBy
+  $kintoOrderBy: kintoTransfer_orderBy
+  $scrollOrderBy: scrollTransfer_orderBy
+  $orderDirection: OrderDirection
+) {
+  disasterDescriptives(where: { vaultAddress: $vault }) {
+    id
+    name
+    description
+    disasterType
+    location
+    createdAt
+    fundsNeeded
+    ensName
+    baseName
+    vaultAddress
+    attestationId
+    transactionHash
+    hyperlaneMessageId
+    totalFundsReleased
+    totalBeneficiaries
+    fundReleases {
+      id
+      beneficiary {
+        id
+        name
+        totalAmountReceived
+      }
+      attestationId
+      comments
+      amountInUSD
+      hyperlaneMessageId
+      transactionHash
+      claims {
+        chainId
+        tokens
+        amounts
+      }
+    }
+  }
+
+  baseTransfers(
+    where: { to: $to }
+    orderBy: $baseOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+
+  ethTransfers(
+    where: { to: $to }
+    orderBy: $ethereumOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+
+  polTransfers(
+    where: { to: $to }
+    orderBy: $polygonOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+
+  kintoTransfers(
+    where: { to: $to }
+    orderBy: $kintoOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+
+  scrollTransfers(
+    where: { to: $to }
+    orderBy: $scrollOrderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    token {
+      id
+      name
+      symbol
+    }
+    from {
+      id
+    }
+    to {
+      id
+    }
+    amount
+    blockNumber
+    timestamp
+    transactionHash
+  }
+}
