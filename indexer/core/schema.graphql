@@ -1,0 +1,88 @@
+type disaster @entity {
+  "the disaster id"
+  id: ID!
+
+  "attestation id for the disaster"
+  attestationId: Bytes!
+
+  "vault address created for the disaster"
+  vaultAddress: Bytes!
+
+  "estimated requirement in USD"
+  estimatedRequirementInUSD: BigInt!
+
+  "all fundings allocated for this disaster"
+  fundings: [funding!]! @derivedFrom(field: "disaster")
+
+  "total funding amount allocated in USD"
+  totalFundingAmount: BigInt!
+
+  "total number of beneficiaries"
+  totalBeneficiaries: BigInt!
+
+  "transaction hash of disaster creation"
+  transactionHash: Bytes!
+}
+
+type beneficiary @entity {
+  "beneficiary address"
+  id: ID!
+
+  "fundings received by this beneficiary"
+  fundings: [funding!]! @derivedFrom(field: "beneficiary")
+
+  "total funding amount received in USD"
+  totalReceivedAmount: BigInt!
+
+  "total number of fundings received"
+  totalFundingsReceived: BigInt!
+
+  "total number of claims initiated"
+  totalClaimsInitiated: BigInt!
+}
+
+type funding @entity {
+  "funding id"
+  id: ID!
+
+  "the disaster this funding belongs to"
+  disaster: disaster!
+
+  "the beneficiary receiving the funding"
+  beneficiary: beneficiary!
+
+  "array of claims across chains"
+  claims: [claim!]! @derivedFrom(field: "funding")
+
+  "total funding amount in USD"
+  amountInUSD: BigInt!
+
+  "whether funding has been claimed"
+  claimed: Boolean!
+
+  "attestation id for funding approval"
+  attestationId: Bytes!
+
+  "transaction hash of funding unlock"
+  transactionHash: Bytes!
+}
+
+type claim @entity {
+  "funding id + chain id + index"
+  id: ID!
+
+  "the funding this claim belongs to"
+  funding: funding!
+
+  "chain id where claim is to be processed"
+  chainId: BigInt!
+
+  "array of token indices"
+  tokens: [BigInt!]!
+
+  "array of token amounts"
+  amounts: [BigInt!]!
+
+  "transaction hash of claim initiation"
+  transactionHash: Bytes!
+}

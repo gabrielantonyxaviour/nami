@@ -1,0 +1,66 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: WETH
+    network: base-sepolia
+    source:
+      abi: WETH
+      address: "0xBE3D118760d9be86688D88929c2122cEc9Ec4635"
+      startBlock: 17912960
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: WETH
+          file: ./abis/Token.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleWETHTransfer
+      file: ./src/token.ts
+  - kind: ethereum
+    name: USDC
+    network: base-sepolia
+    source:
+      abi: USDC
+      address: "0x4393eD225A2F48C27eA6CeBec139190cb8EA8A5F"
+      startBlock: 17912960
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: USDC
+          file: ./abis/Token.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleUSDCTransfer
+      file: ./src/token.ts
+  - kind: ethereum
+    name: USDT
+    network: base-sepolia
+    source:
+      abi: USDT
+      address: "0x9FafD4cB45410a931b538F1D97EFCC28b147E449"
+      startBlock: 17912960
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: USDT
+          file: ./abis/Token.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleUSDTTransfer
+      file: ./src/token.ts
