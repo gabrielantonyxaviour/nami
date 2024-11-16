@@ -25,8 +25,8 @@ contract NamiAiClient {
         bytes32[4] priceFeedIds;
         uint64 createDisasterSchemaId;
         uint64 unlockFundsSchemaId;
-        address testingCore;
-        address testingAiAgent;
+        address namiCore;
+        address namiMpcWallet;
         address vaultFactory;
     }
 
@@ -59,7 +59,7 @@ contract NamiAiClient {
 
     uint32 public KINTO_DOMAIN_ID = 7887;
     address public owner;
-    address public testingCore;
+    address public namiCore;
     mapping(address=>bool) public allowlistedAddresses;
     mapping(uint256=>uint64) public disasterIdToAttestationId;
     ISP public spInstance;
@@ -76,9 +76,9 @@ contract NamiAiClient {
         priceFeedIds = _params.priceFeedIds;
         createDisasterSchemaId = _params.createDisasterSchemaId;
         unlockFundsSchemaId = _params.unlockFundsSchemaId;
-        testingCore = _params.testingCore;
+        namiCore = _params.namiCore;
         owner = msg.sender;
-        allowlistedAddresses[_params.testingAiAgent] = true;
+        allowlistedAddresses[_params.namiMpcWallet] = true;
         vaultFactory= _params.vaultFactory;
     }
 
@@ -126,7 +126,7 @@ contract NamiAiClient {
 
         uint64 _attestationId = spInstance.attest(a, "", "", "");
         disasterIdToAttestationId[disasterCount] = _attestationId;
-        bytes32 _messageId = mailbox.dispatch{value: 0}(KINTO_DOMAIN_ID, addressToBytes32(testingCore), abi.encode(uint8(0), abi.encode(_attestationId, _params.fundsNeeded)));
+        bytes32 _messageId = mailbox.dispatch{value: 0}(KINTO_DOMAIN_ID, addressToBytes32(namiCore), abi.encode(uint8(0), abi.encode(_attestationId, _params.fundsNeeded)));
 
         emit CreateDisasterInitiated(_messageId, _attestationId, _params, vaultAddress);
         disasterCount += 1;
@@ -156,7 +156,7 @@ contract NamiAiClient {
                 data: data 
             });
         uint64 _attestationId = spInstance.attest(a, "", "", "");
-        bytes32 _messageId = mailbox.dispatch{value: 0}(KINTO_DOMAIN_ID, addressToBytes32(testingCore), abi.encode(uint8(1), abi.encode(_attestationId, _disasterId, _params.beneficiaryAddress, _params.claims, _totalUsdAmount)));
+        bytes32 _messageId = mailbox.dispatch{value: 0}(KINTO_DOMAIN_ID, addressToBytes32(namiCore), abi.encode(uint8(1), abi.encode(_attestationId, _disasterId, _params.beneficiaryAddress, _params.claims, _totalUsdAmount)));
 
         emit UnlockFundsInitiated(_messageId, _disasterId, _attestationId, _params, _totalUsdAmount);
 

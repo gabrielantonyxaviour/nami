@@ -1,4 +1,4 @@
-const { networks } = require("../networks");
+const { networks, vaultFactory: vaultFactoryAddress } = require("../networks");
 const { ethers, Contract } = require("ethers");
 
 const {
@@ -15,23 +15,19 @@ async function main() {
   let provider = new ethers.JsonRpcProvider(networks.kinto.url);
   let signer = new ethers.Wallet(process.env.TEST_PRIVATE_KEY || "", provider);
 
-  // const core = new Contract(networks.kinto.core, coreAbi, signer);
+  const core = new Contract(networks.kinto.core, coreAbi, signer);
 
-  // console.log("Initializing Core...");
+  console.log("Initializing Core...");
 
-  // let tx = await core.initialize(
-  //   networks.baseSepolia.aiClient,
-  //   networks.kinto.vaultFactory
-  // );
-
-  // console.log("Core initialized at: ", tx.hash);
-  // console.log(networks.kinto.blockExplorer + "/tx/" + tx.hash);
-
-  let vaultFactory = new Contract(
-    networks.kinto.vaultFactory,
-    vaultFactoryAbi,
-    signer
+  let tx = await core.initialize(
+    networks.baseSepolia.aiClient,
+    vaultFactoryAddress
   );
+
+  console.log("Core initialized at: ", tx.hash);
+  console.log(networks.kinto.blockExplorer + "/tx/" + tx.hash);
+
+  let vaultFactory = new Contract(vaultFactoryAddress, vaultFactoryAbi, signer);
 
   console.log("Initializing VaultFactory in Kinto...");
 
@@ -53,11 +49,7 @@ async function main() {
   provider = new ethers.JsonRpcProvider(networks.scrollSepolia.url);
   signer = new ethers.Wallet(process.env.TEST_PRIVATE_KEY || "", provider);
 
-  vaultFactory = new Contract(
-    networks.scrollSepolia.vaultFactory,
-    vaultFactoryAbi,
-    signer
-  );
+  vaultFactory = new Contract(vaultFactoryAddress, vaultFactoryAbi, signer);
 
   tx = await vaultFactory.initialize(
     networks.scrollSepolia.mailbox,
@@ -77,11 +69,7 @@ async function main() {
   provider = new ethers.JsonRpcProvider(networks.sepolia.url);
   signer = new ethers.Wallet(process.env.TEST_PRIVATE_KEY || "", provider);
 
-  vaultFactory = new Contract(
-    networks.sepolia.vaultFactory,
-    vaultFactoryAbi,
-    signer
-  );
+  vaultFactory = new Contract(vaultFactoryAddress, vaultFactoryAbi, signer);
 
   tx = await vaultFactory.initialize(
     networks.sepolia.mailbox,
@@ -101,11 +89,7 @@ async function main() {
   provider = new ethers.JsonRpcProvider(networks.baseSepolia.url);
   signer = new ethers.Wallet(process.env.TEST_PRIVATE_KEY || "", provider);
 
-  vaultFactory = new Contract(
-    networks.baseSepolia.vaultFactory,
-    vaultFactoryAbi,
-    signer
-  );
+  vaultFactory = new Contract(vaultFactoryAddress, vaultFactoryAbi, signer);
 
   tx = await vaultFactory.initialize(
     networks.baseSepolia.mailbox,
@@ -125,11 +109,7 @@ async function main() {
   provider = new ethers.JsonRpcProvider(networks.polygonAmoy.url);
   signer = new ethers.Wallet(process.env.TEST_PRIVATE_KEY || "", provider);
 
-  vaultFactory = new Contract(
-    networks.polygonAmoy.vaultFactory,
-    vaultFactoryAbi,
-    signer
-  );
+  vaultFactory = new Contract(vaultFactoryAddress, vaultFactoryAbi, signer);
 
   tx = await vaultFactory.initialize(
     networks.polygonAmoy.mailbox,

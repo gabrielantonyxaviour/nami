@@ -35,7 +35,7 @@ const networks = {
     mailbox: "0xB127bd20bf4c7723148B588e10B5d3A1E2E86242",
     isp: "0x4e4af2a21ebf62850fD99Eb6253E1eFBb56098cD",
     pythFeed: "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729",
-    aiClient: "0x2AF692b4C3507F414D829DcfAB3603235C7916b1",
+    aiClient: "0xC527C0d636787199Fd11c147A0602a6f38Ce9bc9",
     createDisasterSchemaId: "0x3d5",
     fundDisasterSchemaId: "0x3d2",
     tokens: {
@@ -56,7 +56,7 @@ const networks = {
     blockExplorer: "https://explorer.kinto.xyz/",
     verifyApiUrl: "https://explorer.kinto.xyz/api",
     mailbox: "0xA112c44A6E4DB0E00c58091c6dE1121e49f83Eec",
-    core: "0xf507ae166214dF4bD1851B955BE608d7419542e3",
+    core: "0xC527C0d636787199Fd11c147A0602a6f38Ce9bc9",
     pythFeed: "0x2880aB155794e7179c9eE2e38200202908C17B43",
     tokens: {
       weth: "0x86c207ebF3aE9e9A93B9a045360a8f5Fc983C777",

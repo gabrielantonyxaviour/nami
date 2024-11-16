@@ -2,6 +2,7 @@ const {
   networks,
   priceFeedIds,
   namiMpcWalletAddress,
+  vaultFactory,
 } = require("../../networks");
 
 task("deploy-client", "Deploys the NamiAiClient contract")
@@ -31,6 +32,7 @@ task("deploy-client", "Deploys the NamiAiClient contract")
         networks.baseSepolia.fundDisasterSchemaId,
         networks.kinto.core,
         namiMpcWalletAddress,
+        vaultFactory,
       ],
     ];
 

@@ -14,7 +14,7 @@ async function main() {
   const core = new Contract(networks.baseSepolia.aiClient, aiClientAbi, signer);
 
   const tx = await core.allowlistAiAgent(
-    "0x0429A2Da7884CA14E53142988D5845952fE4DF6a"
+    "0xD64fEF5aadD3a3996608B6a90A9E6a04d5A691ED"
   );
 
   console.log("AiAgent set at: ", tx.hash);
