@@ -15,8 +15,7 @@ task("deploy-core", "Deploys the NamiCore contract")
 
     const coreContractFactory = await ethers.getContractFactory("NamiCore");
 
-    // TODO: Change to Kinto
-    const args = [networks.polygonAmoy.mailbox];
+    const args = [networks.kinto.mailbox];
 
     const coreContract = await coreContractFactory.deploy(...args);
 

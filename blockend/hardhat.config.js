@@ -37,7 +37,6 @@ module.exports = {
       kinto: networks.kinto.verifyApiKey,
       scrollSepolia: networks.scrollSepolia.verifyApiKey,
       polygonAmoy: networks.polygonAmoy.verifyApiKey,
-      zircuitSepolia: networks.zircuitSepolia.verifyApiKey,
       sepolia: networks.sepolia.verifyApiKey,
     },
     customChains: [
@@ -71,14 +70,6 @@ module.exports = {
         urls: {
           apiURL: networks.scrollSepolia.verifyApiUrl,
           browserURL: networks.scrollSepolia.blockExplorer,
-        },
-      },
-      {
-        network: "zircuitSepolia",
-        chainId: networks.zircuitSepolia.chainId,
-        urls: {
-          apiURL: networks.zircuitSepolia.verifyApiUrl,
-          browserURL: networks.zircuitSepolia.blockExplorer,
         },
       },
       {

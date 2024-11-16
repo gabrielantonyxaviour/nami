@@ -35,7 +35,6 @@ contract NamiAiClient {
         string description;
         string disasterType;
         string location;
-        uint256 timestamp;
         uint256 fundsNeeded;
         address vaultAddress;
         string ensName;
@@ -99,11 +98,16 @@ contract NamiAiClient {
         allowlistedAddresses[aiAgent] = true;
     }
 
+    function updateSchemaIds(uint64 _createDisasterSchemaId, uint64 _unlockFundsSchemaId) external onlyOwner {
+        createDisasterSchemaId = _createDisasterSchemaId;
+        unlockFundsSchemaId = _unlockFundsSchemaId;
+    }
+
     function createDisaster(Disaster memory _params) external onlyAiAgent {
         bytes[] memory recipients = new bytes[](1);
         recipients[0] = abi.encode(msg.sender);
 
-        bytes memory data = abi.encode(_params.name, _params.description, _params.disasterType, _params.location, _params.timestamp, _params.fundsNeeded, _params.vaultAddress, _params.ensName, _params.baseName);
+        bytes memory data = abi.encode(_params.name, _params.description, _params.disasterType, _params.location, block.timestamp, _params.fundsNeeded, _params.vaultAddress, _params.ensName, _params.baseName);
         Attestation memory a = Attestation({
                 schemaId: createDisasterSchemaId,
                 linkedAttestationId: 0,
