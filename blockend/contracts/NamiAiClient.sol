@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/utils/Create2.sol";
 
 import "./hyperlane/Structs.sol";
 import "./hyperlane/IMailbox.sol";
+import "./interface/IVaultFactory.sol"; 
 import { ISP } from "@ethsign/sign-protocol-evm/src/interfaces/ISP.sol";
 import { Attestation } from "@ethsign/sign-protocol-evm/src/models/Attestation.sol";
 import { DataLocation } from "@ethsign/sign-protocol-evm/src/models/DataLocation.sol";
@@ -66,6 +67,7 @@ contract NamiAiClient {
     uint64 public createDisasterSchemaId;
     uint64 public unlockFundsSchemaId;
     uint256 public disasterCount;
+    address public vaultFactory;
 
     constructor(ConstructorParams memory _params) {
         mailbox = _params.mailbox;
@@ -77,6 +79,7 @@ contract NamiAiClient {
         testingCore = _params.testingCore;
         owner = msg.sender;
         allowlistedAddresses[_params.testingAiAgent] = true;
+        vaultFactory= _params.vaultFactory;
     }
 
     modifier onlyOwner() {
@@ -207,7 +210,7 @@ contract NamiAiClient {
     }
 
     function getVaultAddress(uint256 _disasterId) public view returns (address) {
-        return IVaultFactory(_vaultFactory).getVaultAddress(_disasterId);
+        return IVaultFactory(vaultFactory).getVaultAddress(_disasterId);
     }
 
 }
