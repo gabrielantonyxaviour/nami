@@ -1,0 +1,212 @@
+from googleapiclient.discovery import build
+from openai import OpenAI
+import os
+from cdp import Cdp
+from cdp.smart_contract import SmartContract
+from cdp.errors import ApiError
+import requests
+import json
+
+# Replace this with your actual OpenAI API key
+OPENAI_API_KEY = "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"
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+# Configure CDP with your API key and private key
+CDP_API_KEY_NAME = "organizations/19c60523-489a-4d08-bd67-09802f8c4e0e/apiKeys/9f181c6b-0957-4bfe-a6e1-94aada728557"
+CDP_PRIVATE_KEY = """-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEINqKEOJ0pLfzf1/olxyRs5+4NgBcUmhIy7hQektwfyeboAoGCCqGSM49
+AwEHoUQDQgAEz82hPpxZ6f0uDwJATmoirCzXIg+QSoGSxHX9GQhsQGYWSMVACbHY
+2ZneIWr8AVvXOzp/SvuyWZFSXUeRjmEzbg== 
+-----END EC PRIVATE KEY-----"""
+
+Cdp.configure(CDP_API_KEY_NAME, CDP_PRIVATE_KEY)
+
+# Smart contract ABI and address for the Geez contract
+contract_abi = [
+    {
+        "inputs": [],
+        "name": "getVaultAddress",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "_contractAddress",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]
+contract_address = "0xeea40921519F31e1b5976d69695d952ea19A3b03"  # Replace with actual address
+network_id = "base-sepolia"  # Specify your network ID
+
+class GoogleChat:
+    def __init__(self):
+        self.service = build(
+            "customsearch", 
+            "v1", 
+            developerKey="AIzaSyCXSIY4SuqD8oy3HNzVzoNsJtvqHn4-tmA"
+        )
+        self.history = []
+
+    def _search(self, query):
+        response = (
+            self.service.cse()
+            .list(
+                q=query,
+                cx="22519d08efb844a5d"
+            )
+            .execute()
+        )
+        return response['items']
+
+    def _get_search_query(self, query):
+        messages = [{"role": "system",
+                     "content": "You are an assistant that helps to convert text into a web search engine query. "
+                                "You output only 1 query for the latest message and nothing else."}]
+
+        for message in self.history:
+            messages.append({"role": "user", "content": message[0]})
+
+        messages.append({"role": "user", "content": f"Based on my previous messages, what is the most relevant web search query for the text below?\n\nText: {query}\n\nQuery:"})
+
+        response = client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=messages,
+            temperature=0
+        )
+        
+        return response.choices[0].message.content.strip("\"")
+
+    def get_response(self, query):
+        search_query = self._get_search_query(query)
+        print("\nSearching for:", search_query)
+        print("-" * 50)
+
+        messages = [{"role": "system",
+                     "content": ("1.) Your job is to search the ENTIRE internet for a recent disaster in November 2024 and give me the output in the following way "
+                                 "2.) Your output should always follow ONLY this template and NEVER EVER deviate from it "
+                                 "3.) name: [Random name associated with the disaster] "
+                                 "description: [A description of what the disaster is all about] "
+                                 "type: [The type of disaster (earthquake, flood, drought etc.) fill this area by categorizing what kind of disaster it is] "
+                                 "location: [The location in which the disaster took place] "
+                                 "date: [The date on which the disaster took place] "
+                                 "funds needed: [The amount of money needed in USD by the people in that affected area to overcome the loss] MOST IMPORTANT RULE: This value should NEVER EVER contain special characters or words or commas. It should be a number. eg: 200000, 400000 etc. Calculate the amount of funds needed by the people in that area by taking into account the factors like: damage to properties, lives lost, people injured, infrastructure damages and be reasonable with your calculation."
+                                 "ens subdomain: [a simple name associated with the disaster] "
+                                 "base subdomain: [same as the ens subdomain name] "
+                                 "vault address: [The address of the vault where the funds will be stored] "
+                                 "tweet content: [Create a tweet with the details about the disaster asking for help. The tweet should contain information about the disaster, the location, people affected and especially the funds needed. Be as human as possible when creating this tweet content]")}]
+
+
+        for message in self.history:
+            messages.append({"role": "user", "content": message[0]})
+            if message[1]:
+                messages.append({"role": "assistant", "content": message[1]})
+
+        prompt = f"Answer query using the information from the search results below: \n\n"
+        results = self._search(search_query)
+        for result in results:
+            prompt += f"Link: {result['link']}\nTitle: {result['title']}\nContent: {result['snippet']}\n\n"
+        
+        prompt += f"Query: {query}"
+        messages.append({"role": "user", "content": prompt})
+
+        response = client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=messages,
+            temperature=0.7
+        )
+
+        response_text = response.choices[0].message.content
+
+        # Parse the output to extract the relevant fields
+        data = {}
+        for line in response_text.strip().split('\n'):
+            if ': ' in line:
+                key, value = line.split(': ', 1)
+                if key == 'funds needed':
+                    data[key] = int(value)
+                else:
+                    data[key] = value
+
+        # Call to read from smart contract to get the vault address
+        data['vaultAddress'] = self.read_vault_address()
+
+        # Send the parsed data to the /create-attestation endpoint
+        response_from_endpoint = self.send_to_attestation_endpoint(data)
+
+        self.history.append((query, response_text))
+        
+        print("\nAttestation Response:")
+        print("-" * 50)
+        print(response_from_endpoint)
+        print("-" * 50)
+
+        return response_text
+
+    def read_vault_address(self):
+        try:
+            vault_address = SmartContract.read(
+                network_id=network_id,
+                contract_address=contract_address,
+                method="getVaultAddress",
+                abi=contract_abi,
+            )
+            return vault_address
+        
+        except ApiError as api_err:
+            return f"Error reading vault address: {api_err.http_code} - {api_err.api_code}: {api_err.api_message}"
+        
+        except Exception as e:
+            return f"Unexpected error reading vault address: {str(e)}"
+
+    def send_to_attestation_endpoint(self, data):
+        url = "http://127.0.0.1:3000/create-attestation"
+        payload = {
+            "name": data["name"],
+            "description": data["description"],
+            "type": data["type"],
+            "location": data["location"],
+            "date": data["date"],
+            "fundNeeded": data["funds needed"],
+            "vaultAddress": data["vaultAddress"],
+            "ensSubdomain": data["ens subdomain"],
+            "baseSubdomain": data["base subdomain"]
+        }
+        headers = {
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.post(url, headers=headers, data=json.dumps(payload))
+        
+        if response.status_code == 200:
+            print("Attestation created successfully!")
+            response_json = response.json()
+            attestationId = response_json['data']['attestationId'] # use this!!!
+            funds_needed = data["funds needed"] #use this !!!
+            print("Attestation ID:", attestationId)
+            print("Funds Needed:", funds_needed)
+            return response.json()  # Return the response from the endpoint
+        else:
+            print(f"Failed to create attestation. Error: {response.json()['error']}")
+            return response.json()  # Return the error response
+        
+
+def main():
+    bot = GoogleChat()
+    
+    # Prompt the user for a single question
+    query = input("\nYour question: ").strip()
+    
+    if query:
+        try:
+            response = bot.get_response(query)
+            print("\nResponse:")
+            print("-" * 50)
+            print(response)
+            print("-" * 50)
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
+if __name__ == '__main__':
+    main()
