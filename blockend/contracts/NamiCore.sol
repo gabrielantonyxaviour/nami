@@ -11,7 +11,7 @@ error InvalidFundingId(uint256 fundingId);
 error InvalidCrosschainCaller(uint32 _origin, bytes32 _sender);
 error NotMailbox();
 
-contract TestingCore {
+contract NamiCore {
 
     struct Disaster {
         uint64 attestationId;
@@ -47,7 +47,7 @@ contract TestingCore {
     bool public initialized;
 
     IMailbox public mailbox;
-    uint32 public constant KINTO_DOMAIN_ID = 80002;
+    uint32 public constant KINTO_DOMAIN_ID = 7887;
     uint32 public constant BASE_DOMAIN_ID = 84532;
 
     constructor(IMailbox _mailbox) {

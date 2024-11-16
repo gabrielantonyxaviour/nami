@@ -4,7 +4,7 @@ const { Contract } = require("ethers");
 
 const {
   abi: coreAbi,
-} = require("../build/artifacts/contracts/TestingCore.sol/TestingCore.json");
+} = require("../build/artifacts/contracts/NamiCore.sol/NamiCore.json");
 
 require("dotenv").config();
 

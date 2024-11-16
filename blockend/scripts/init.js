@@ -4,11 +4,11 @@ const { Contract } = require("ethers");
 
 const {
   abi: coreAbi,
-} = require("../build/artifacts/contracts/TestingCore.sol/TestingCore.json");
+} = require("../build/artifacts/contracts/NamiCore.sol/NamiCore.json");
 
 const {
   abi: vaultFactoryAbi,
-} = require("../build/artifacts/contracts/TestingVaultFactory.sol/TestingVaultFactory.json");
+} = require("../build/artifacts/contracts/NamiVaultFactory.sol/NamiVaultFactory.json");
 
 require("dotenv").config();
 

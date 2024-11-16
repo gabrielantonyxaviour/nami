@@ -1,6 +1,6 @@
 const { networks } = require("../../networks");
 
-task("deploy-factory", "Deploys the TestingVaultFactory contract")
+task("deploy-factory", "Deploys the NamiVaultFactory contract")
   .addOptionalParam(
     "verify",
     "Set to true to verify contract",
@@ -8,13 +8,13 @@ task("deploy-factory", "Deploys the TestingVaultFactory contract")
     types.boolean
   )
   .setAction(async (taskArgs) => {
-    console.log(`Deploying TestingVaultFactory contract to ${network.name}`);
+    console.log(`Deploying NamiVaultFactory contract to ${network.name}`);
 
     console.log("\n__Compiling Contracts__");
     await run("compile");
 
     const factoryContractFactory = await ethers.getContractFactory(
-      "TestingVaultFactory"
+      "NamiVaultFactory"
     );
 
     const args = [];
@@ -34,7 +34,7 @@ task("deploy-factory", "Deploys the TestingVaultFactory contract")
     );
 
     console.log(
-      "\nDeployed TestingVaultFactory contract to:",
+      "\nDeployed NamiVaultFactory contract to:",
       factoryContract.address
     );
 
@@ -73,6 +73,6 @@ task("deploy-factory", "Deploys the TestingVaultFactory contract")
     }
 
     console.log(
-      `\n TestingVaultFactory contract deployed to ${factoryContract.address} on ${network.name}`
+      `\n NamiVaultFactory contract deployed to ${factoryContract.address} on ${network.name}`
     );
   });

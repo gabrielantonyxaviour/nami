@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Create2.sol";
 
 import "./hyperlane/Structs.sol";
 import "./hyperlane/IMailbox.sol";
-import "./TestingVault.sol";
+import "./NamiVault.sol";
 import { ISP } from "@ethsign/sign-protocol-evm/src/interfaces/ISP.sol";
 import { Attestation } from "@ethsign/sign-protocol-evm/src/models/Attestation.sol";
 import { DataLocation } from "@ethsign/sign-protocol-evm/src/models/DataLocation.sol";
@@ -17,7 +17,7 @@ error InsufficientBetAmount(uint256 betAmount, uint256 requiredAmount);
 error NotAIAgent();
 error NotOwner(address owner, address caller);
 
-contract TestingAiClient {
+contract NamiAiClient {
 
     struct ConstructorParams {
         IMailbox mailbox;
@@ -59,7 +59,7 @@ contract TestingAiClient {
     IMailbox public mailbox;
     IPyth public priceOracle;
 
-    uint32 public KINTO_DOMAIN_ID = 80002;
+    uint32 public KINTO_DOMAIN_ID = 7887;
     address public owner;
     address public testingCore;
     mapping(address=>bool) public allowlistedAddresses;
@@ -203,7 +203,7 @@ contract TestingAiClient {
     }
 
     function getVaultAddress(uint256 _disasterId) external view returns (address) {
-        bytes memory bytecode = type(TestingVault).creationCode;
+        bytes memory bytecode = type(NamiVault).creationCode;
         return Create2.computeAddress(bytes32(_disasterId), keccak256(bytecode));
     }
 

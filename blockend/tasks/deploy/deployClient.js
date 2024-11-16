@@ -1,6 +1,6 @@
 const { networks, priceFeedIds } = require("../../networks");
 
-task("deploy-client", "Deploys the TestingAiClient contract")
+task("deploy-client", "Deploys the NamiAiClient contract")
   .addOptionalParam(
     "verify",
     "Set to true to verify contract",
@@ -8,13 +8,13 @@ task("deploy-client", "Deploys the TestingAiClient contract")
     types.boolean
   )
   .setAction(async (taskArgs) => {
-    console.log(`Deploying TestingAiClient contract to ${network.name}`);
+    console.log(`Deploying NamiAiClient contract to ${network.name}`);
 
     console.log("\n__Compiling Contracts__");
     await run("compile");
 
     const clientContractFactory = await ethers.getContractFactory(
-      "TestingAiClient"
+      "NamiAiClient"
     );
 
     // TODO: Change to Kinto
@@ -47,10 +47,7 @@ task("deploy-client", "Deploys the TestingAiClient contract")
       networks[network.name].confirmations
     );
 
-    console.log(
-      "\nDeployed TestingAiClient contract to:",
-      clientContract.address
-    );
+    console.log("\nDeployed NamiAiClient contract to:", clientContract.address);
 
     if (network.name === "localFunctionsTestnet") {
       return;
@@ -87,6 +84,6 @@ task("deploy-client", "Deploys the TestingAiClient contract")
     }
 
     console.log(
-      `\n TestingAiClient contract deployed to ${clientContract.address} on ${network.name}`
+      `\n NamiAiClient contract deployed to ${clientContract.address} on ${network.name}`
     );
   });

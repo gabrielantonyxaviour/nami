@@ -1,6 +1,6 @@
 const { networks, priceFeedIds } = require("../../networks");
 
-task("deploy-core", "Deploys the TestingCore contract")
+task("deploy-core", "Deploys the NamiCore contract")
   .addOptionalParam(
     "verify",
     "Set to true to verify contract",
@@ -8,12 +8,12 @@ task("deploy-core", "Deploys the TestingCore contract")
     types.boolean
   )
   .setAction(async (taskArgs) => {
-    console.log(`Deploying TestingCore contract to ${network.name}`);
+    console.log(`Deploying NamiCore contract to ${network.name}`);
 
     console.log("\n__Compiling Contracts__");
     await run("compile");
 
-    const coreContractFactory = await ethers.getContractFactory("TestingCore");
+    const coreContractFactory = await ethers.getContractFactory("NamiCore");
 
     // TODO: Change to Kinto
     const args = [networks.polygonAmoy.mailbox];
@@ -32,7 +32,7 @@ task("deploy-core", "Deploys the TestingCore contract")
       networks[network.name].confirmations
     );
 
-    console.log("\nDeployed TestingCore contract to:", coreContract.address);
+    console.log("\nDeployed NamiCore contract to:", coreContract.address);
 
     if (network.name === "localFunctionsTestnet") {
       return;
@@ -69,6 +69,6 @@ task("deploy-core", "Deploys the TestingCore contract")
     }
 
     console.log(
-      `\n TestingCore contract deployed to ${coreContract.address} on ${network.name}`
+      `\n NamiCore contract deployed to ${coreContract.address} on ${network.name}`
     );
   });

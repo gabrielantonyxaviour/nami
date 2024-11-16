@@ -6,7 +6,7 @@ import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "./hyperlane/Structs.sol";
 import "./hyperlane/IMailbox.sol";
-import "./TestingVault.sol";
+import "./NamiVault.sol";
 import "./interface/IVault.sol"; 
 
 error NotAuthorizedCaller(address caller);
@@ -14,13 +14,13 @@ error CannotPerformOperationOnThisChain();
 error VaultDoesNotExist(address vault);
 error InvalidSenderChain(uint32 _origin);
 
-contract TestingVaultFactory {
+contract NamiVaultFactory {
 
     bool public initialized;
 
     IMailbox public mailbox;
     address public authorizedCaller;
-    uint256 public KINTO_CHAIN_ID = 80002;
+    uint256 public KINTO_CHAIN_ID = 7887;
 
     address[3] public tokenAddresses;
 
@@ -56,7 +56,7 @@ contract TestingVaultFactory {
     }
 
     function _createVault(uint256 salt) internal returns(address deployed) {
-        bytes memory bytecode = type(TestingVault).creationCode;
+        bytes memory bytecode = type(NamiVault).creationCode;
         deployed = Create2.deploy(0, bytes32(salt), bytecode);
         vaults[salt] = deployed; 
         IVault(deployed).initialize(address(this), tokenAddresses);
@@ -77,7 +77,7 @@ contract TestingVaultFactory {
 
     function _claimFunds(address _vault, address _beneficiary,  uint256 ethAmount, uint256 wethAmount, uint256 usdcAmount, uint256 usdtAmount) internal  {
         if(_vault == address(0)) revert VaultDoesNotExist(_vault);
-        TestingVault(payable(_vault)).withdrawValue(_beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);
+        NamiVault(payable(_vault)).withdrawValue(_beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);
         emit FundsClaimed(_vault, _beneficiary, ethAmount, wethAmount, usdcAmount, usdtAmount);
     }
 
@@ -97,7 +97,7 @@ contract TestingVaultFactory {
     }
 
     function getVaultAddress(uint256 _disasterId) external view returns (address) {
-        bytes memory bytecode = type(TestingVault).creationCode;
+        bytes memory bytecode = type(NamiVault).creationCode;
         return Create2.computeAddress(bytes32(_disasterId), keccak256(bytecode));
     }
  

@@ -8,7 +8,7 @@ error AlreadyInitialized();
 error InvalidCaller(address sender);
 error InsufficientAllowance(address sender, address token, uint256 amount);
 
-contract TestingVault{
+contract NamiVault{
 
     // mapping(uint8=>uint256) public tokenBalances;
     // mapping(uint8=>uint256) public transferredAmounts;

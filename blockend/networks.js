@@ -31,9 +31,8 @@ const networks = {
     blockExplorer: "https://base-sepolia.blockscout.com",
     mailbox: "0xB127bd20bf4c7723148B588e10B5d3A1E2E86242",
     isp: "0x4e4af2a21ebf62850fD99Eb6253E1eFBb56098cD",
-    vaultFactory: "0x1C06b94e180B3215042fcbC8b389F835A0B5aFa5",
-    pythOracle: "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729",
-    aiClient: "0x80db663024Ef080De87d2A1255ef54aa88b723b4",
+    vaultFactory: "",
+    aiClient: "",
     createDisasterSchemaId: "0x3d5",
     fundDisasterSchemaId: "0x3d2",
     tokens: {
@@ -55,6 +54,7 @@ const networks = {
     verifyApiUrl: "https://explorer.kinto.xyz/api",
     mailbox: "0xA112c44A6E4DB0E00c58091c6dE1121e49f83Eec",
     vaultFactory: "",
+    core: "",
     tokens: {
       weth: "0x86c207ebF3aE9e9A93B9a045360a8f5Fc983C777",
       usdc: "0x30DFfC0693bb1bBd756bDFFdc8df5F56cc2d30C2",
@@ -73,9 +73,7 @@ const networks = {
     blockExplorer: "https://amoy.polygonscan.com",
     verifyApiUrl: "https://api-amoy.polygonscan.com/api",
     mailbox: "0x9288277372982b74C174132B5f43B9b1900855Fd",
-    pythOracle: "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C", // TODO: It should be in Kinto
-    core: "0xb1515f97f08046Cf041d978068f66986Ab750FBC", // TODO: It should be in Kinto
-    vaultFactory: "0xB7101989eAc2808F8319D1465D18678343FFe21D",
+    vaultFactory: "",
     tokens: {
       weth: "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66",
       usdc: "0xD4171D5a25B3A684d1952Dd8141fA27911004f12",
@@ -94,7 +92,7 @@ const networks = {
     blockExplorer: "https://scroll-sepolia.blockscout.com",
     verifyApiUrl: "https://scroll-sepolia.blockscout.com/api",
     mailbox: "0xdBFf454c77307ccaA6c2762F9f515559f6d728D3",
-    vaultFactory: "0x79E72dCc5beEE7F288c7e73C5052FEEBb9C491d9",
+    vaultFactory: "",
     tokens: {
       weth: "0x582384603173D650D634c52dD37771cFE439A888",
       usdc: "0xdE6d2CaE1BA329c0a09c21Ac6Aa5958A7d355971",
@@ -114,7 +112,7 @@ const networks = {
     verifyApiUrl:
       "https://explorer.testnet.zircuit.com/api/contractVerifyHardhat",
     mailbox: "0xEa8b3dbDAe7779229E8e075FBdf61D0E0a63fb75",
-    vaultFactory: "0x582384603173D650D634c52dD37771cFE439A888",
+    vaultFactory: "",
     tokens: {
       weth: "0x35BFcbcFEb65db335e65256690677eF26fE8da88",
       usdc: "0xf507ae166214dF4bD1851B955BE608d7419542e3",
@@ -133,7 +131,7 @@ const networks = {
     blockExplorer: "https://eth-sepolia.blockscout.com/",
     verifyApiUrl: "https://eth-sepolia.blockscout.com/api",
     mailbox: "0xb2B892c9E8A1137Ae66f508c557a87Fda937FB81",
-    vaultFactory: "0x64CCe32fe7AcDBA2566AdDf9eEF16Ba4434c3E34",
+    vaultFactory: "",
 
     tokens: {
       weth: "0xf9F24Ca70e087CA30D8A1AB45c0cd502A2B3B370",
