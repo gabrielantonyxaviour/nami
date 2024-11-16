@@ -18,7 +18,6 @@ const priceFeedIds = [
 ];
 
 const namiMpcWalletAddress = "0xD64fEF5aadD3a3996608B6a90A9E6a04d5A691ED";
-const vaultFactory = "0x2ba4d9E4a588987EbafE9d864C498Cd109D901E7";
 
 const networks = {
   baseSepolia: {
@@ -35,7 +34,8 @@ const networks = {
     mailbox: "0xB127bd20bf4c7723148B588e10B5d3A1E2E86242",
     isp: "0x4e4af2a21ebf62850fD99Eb6253E1eFBb56098cD",
     pythFeed: "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729",
-    aiClient: "0xC527C0d636787199Fd11c147A0602a6f38Ce9bc9",
+    aiClient: "0x29aD2B4Fb9cD07F9e7C9ce79eEA502260E6465B5",
+    vaultFactory: "0xacF7D6320267Ffc17FF391D9Def96085ada2F79C",
     createDisasterSchemaId: "0x3d5",
     fundDisasterSchemaId: "0x3d2",
     tokens: {
@@ -56,8 +56,9 @@ const networks = {
     blockExplorer: "https://explorer.kinto.xyz/",
     verifyApiUrl: "https://explorer.kinto.xyz/api",
     mailbox: "0xA112c44A6E4DB0E00c58091c6dE1121e49f83Eec",
-    core: "0xC527C0d636787199Fd11c147A0602a6f38Ce9bc9",
+    core: "0x030a87fd4161F6b1749a332e23FC3AB0D5FcaC53",
     pythFeed: "0x2880aB155794e7179c9eE2e38200202908C17B43",
+    vaultFactory: "0x9D26Bb84238344A478918C7F5eeccC8489058fed",
     tokens: {
       weth: "0x86c207ebF3aE9e9A93B9a045360a8f5Fc983C777",
       usdc: "0x30DFfC0693bb1bBd756bDFFdc8df5F56cc2d30C2",
@@ -77,6 +78,7 @@ const networks = {
     verifyApiUrl: "https://api-amoy.polygonscan.com/api",
     mailbox: "0x9288277372982b74C174132B5f43B9b1900855Fd",
     pythFeed: "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729",
+    vaultFactory: "0xFab019C029e08B51c1A1661007dbeCfe23065c71",
     tokens: {
       weth: "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66",
       usdc: "0xD4171D5a25B3A684d1952Dd8141fA27911004f12",
@@ -96,6 +98,7 @@ const networks = {
     verifyApiUrl: "https://scroll-sepolia.blockscout.com/api",
     pythFeed: "0x41c9e39574F40Ad34c79f1C99B66A45eFB830d4c",
     mailbox: "0xdBFf454c77307ccaA6c2762F9f515559f6d728D3",
+    vaultFactory: "0xFab019C029e08B51c1A1661007dbeCfe23065c71",
     tokens: {
       weth: "0x582384603173D650D634c52dD37771cFE439A888",
       usdc: "0xdE6d2CaE1BA329c0a09c21Ac6Aa5958A7d355971",
@@ -115,6 +118,7 @@ const networks = {
     verifyApiUrl: "https://eth-sepolia.blockscout.com/api",
     mailbox: "0xb2B892c9E8A1137Ae66f508c557a87Fda937FB81",
     pythFeed: "0xDd24F84d36BF92C65F92307595335bdFab5Bbd21",
+    vaultFactory: "0xFab019C029e08B51c1A1661007dbeCfe23065c71",
     tokens: {
       weth: "0xf9F24Ca70e087CA30D8A1AB45c0cd502A2B3B370",
       usdc: "0x04D99018f10F500427c76dab28752f04d93c6389",
@@ -127,5 +131,4 @@ module.exports = {
   networks,
   priceFeedIds,
   namiMpcWalletAddress,
-  vaultFactory,
 };

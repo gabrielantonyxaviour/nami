@@ -32,7 +32,7 @@ task("deploy-client", "Deploys the NamiAiClient contract")
         networks.baseSepolia.fundDisasterSchemaId,
         networks.kinto.core,
         namiMpcWalletAddress,
-        vaultFactory,
+        networks.baseSepolia.vaultFactory,
       ],
     ];
 

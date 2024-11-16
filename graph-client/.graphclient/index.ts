@@ -9,11 +9,11 @@ import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
-import type { KintoTransfersTypes } from './sources/KintoTransfers/types';
-import type { NamiAiClientTypes } from './sources/NamiAiClient/types';
-import type { PolygonTransfersTypes } from './sources/PolygonTransfers/types';
 import type { ScrollTransfersTypes } from './sources/ScrollTransfers/types';
 import type { NamiCoreTypes } from './sources/NamiCore/types';
+import type { PolygonTransfersTypes } from './sources/PolygonTransfers/types';
+import type { KintoTransfersTypes } from './sources/KintoTransfers/types';
+import type { NamiAiClientTypes } from './sources/NamiAiClient/types';
 import type { EthereumTransfersTypes } from './sources/EthereumTransfers/types';
 import type { BaseTransfersTypes } from './sources/BaseTransfers/types';
 export type Maybe<T> = T | null;
