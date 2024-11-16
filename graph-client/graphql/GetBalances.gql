@@ -1,0 +1,93 @@
+query GetBalances {
+  kintoBalances(
+    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
+  ) {
+    id
+    amount
+    token {
+      id
+      symbol
+    }
+    account {
+      id
+    }
+  }
+  polBalances(
+    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
+  ) {
+    id
+    amount
+    token {
+      id
+      symbol
+    }
+    account {
+      id
+    }
+  }
+  kintoBalances(
+    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
+  ) {
+    id
+    amount
+    token {
+      id
+      symbol
+    }
+    account {
+      id
+    }
+  }
+  polBalances(
+    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
+  ) {
+    id
+    amount
+    token {
+      id
+      symbol
+    }
+    account {
+      id
+    }
+  }
+  ethBalances(
+    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
+  ) {
+    id
+    amount
+    token {
+      id
+      symbol
+    }
+    account {
+      id
+    }
+  }
+  scrollBalances(
+    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
+  ) {
+    id
+    amount
+    token {
+      id
+      symbol
+    }
+    account {
+      id
+    }
+  }
+  baseBalances(
+    where: { account_contains: "0x0429a2da7884ca14e53142988d5845952fe4df6a" }
+  ) {
+    id
+    amount
+    token {
+      id
+      symbol
+    }
+    account {
+      id
+    }
+  }
+}

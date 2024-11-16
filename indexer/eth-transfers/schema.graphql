@@ -1,37 +1,37 @@
-type token @entity {
-  "token contract address"
+type ethToken @entity {
+  "ethToken contract address"
   id: ID!
 
-  "token name"
+  "ethToken name"
   name: String!
 
-  "token symbol"
+  "ethToken symbol"
   symbol: String!
 
-  "all transfers of this token"
-  transfers: [transfer!]! @derivedFrom(field: "token")
+  "all transfers of this ethToken"
+  transfers: [ethTransfer!]! @derivedFrom(field: "token")
 }
 
-type account @entity {
+type ethAccount @entity {
   "account address"
   id: ID!
   "transfers where this account is the sender"
-  transfersOut: [transfer!]! @derivedFrom(field: "from")
+  transfersOut: [ethTransfer!]! @derivedFrom(field: "from")
   "transfers where this account is the receiver"
-  transfersIn: [transfer!]! @derivedFrom(field: "to")
-  "balances for each token"
-  balances: [balance!]! @derivedFrom(field: "account")
+  transfersIn: [ethTransfer!]! @derivedFrom(field: "to")
+  "balances for each ethToken"
+  balances: [ethBalance!]! @derivedFrom(field: "account")
 }
 
-type balance @entity {
-  "account address + token address"
+type ethBalance @entity {
+  "account address + ethToken address"
   id: ID!
   "the account that holds the balance"
-  account: account!
+  account: ethAccount!
   "the token"
-  token: token!
+  token: ethToken!
   "the vault if this balance belongs to one"
-  vault: vault
+  vault: ethVault
   "current balance"
   amount: BigInt!
   "block number of last update"
@@ -40,17 +40,17 @@ type balance @entity {
   lastUpdateTimestamp: BigInt!
 }
 
-type transfer @entity {
+type ethTransfer @entity {
   "transaction hash + log index"
   id: ID!
-  "the token being transferred"
-  token: token!
+  "the ethToken being transferred"
+  token: ethToken!
   "sender address"
-  from: account!
+  from: ethAccount!
   "receiver address"
-  to: account!
+  to: ethAccount!
   "vault if this is a vault deposit"
-  vault: vault
+  vault: ethVault
   "amount transferred"
   amount: BigInt!
   "block number"
@@ -61,13 +61,13 @@ type transfer @entity {
   transactionHash: Bytes!
 }
 
-type vault @entity {
+type ethVault @entity {
   "vault address"
   id: ID!
   "deposits received by this vault"
-  deposits: [transfer!]! @derivedFrom(field: "vault")
-  "total value locked in vault per token"
-  tokenBalances: [balance!]! @derivedFrom(field: "vault")
+  deposits: [ethTransfer!]! @derivedFrom(field: "vault")
+  "total value locked in vault per ethToken"
+  tokenBalances: [ethBalance!]! @derivedFrom(field: "vault")
   "total number of depositors"
   totalDepositors: BigInt!
   "total value locked across all tokens"

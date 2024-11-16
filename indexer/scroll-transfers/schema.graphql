@@ -1,38 +1,38 @@
-type token @entity {
-  "token contract address"
+type scrollToken @entity {
+  "scrollToken contract address"
   id: ID!
 
-  "token name"
+  "scrollToken name"
   name: String!
 
-  "token symbol"
+  "scrollToken symbol"
   symbol: String!
 
-  "all transfers of this token"
-  transfers: [transfer!]! @derivedFrom(field: "token")
+  "all transfers of this scrollToken"
+  transfers: [scrollTransfer!]! @derivedFrom(field: "token")
 }
 
-type account @entity {
-  "account address"
+type scrollAccount @entity {
+  "scrollAccount address"
   id: ID!
-  "transfers where this account is the sender"
-  transfersOut: [transfer!]! @derivedFrom(field: "from")
-  "transfers where this account is the receiver"
-  transfersIn: [transfer!]! @derivedFrom(field: "to")
-  "balances for each token"
-  balances: [balance!]! @derivedFrom(field: "account")
+  "transfers where this scrollAccount is the sender"
+  transfersOut: [scrollTransfer!]! @derivedFrom(field: "from")
+  "transfers where this scrollAccount is the receiver"
+  transfersIn: [scrollTransfer!]! @derivedFrom(field: "to")
+  "balances for each scrollToken"
+  balances: [scrollBalance!]! @derivedFrom(field: "account")
 }
 
-type balance @entity {
-  "account address + token address"
+type scrollBalance @entity {
+  "scrollAccount address + scrollToken address"
   id: ID!
-  "the account that holds the balance"
-  account: account!
-  "the token"
-  token: token!
-  "the vault if this balance belongs to one"
-  vault: vault
-  "current balance"
+  "the scrollAccount that holds the scrollBalance"
+  account: scrollAccount!
+  "the scrollToken"
+  token: scrollToken!
+  "the scrollVault if this scrollBalance belongs to one"
+  vault: scrollVault
+  "current scrollBalance"
   amount: BigInt!
   "block number of last update"
   lastUpdateBlock: BigInt!
@@ -40,17 +40,17 @@ type balance @entity {
   lastUpdateTimestamp: BigInt!
 }
 
-type transfer @entity {
+type scrollTransfer @entity {
   "transaction hash + log index"
   id: ID!
-  "the token being transferred"
-  token: token!
+  "the scrollToken being transferred"
+  token: scrollToken!
   "sender address"
-  from: account!
+  from: scrollAccount!
   "receiver address"
-  to: account!
-  "vault if this is a vault deposit"
-  vault: vault
+  to: scrollAccount!
+  "scrollVault if this is a scrollVault deposit"
+  vault: scrollVault
   "amount transferred"
   amount: BigInt!
   "block number"
@@ -61,13 +61,13 @@ type transfer @entity {
   transactionHash: Bytes!
 }
 
-type vault @entity {
-  "vault address"
+type scrollVault @entity {
+  "scrollVault address"
   id: ID!
-  "deposits received by this vault"
-  deposits: [transfer!]! @derivedFrom(field: "vault")
-  "total value locked in vault per token"
-  tokenBalances: [balance!]! @derivedFrom(field: "vault")
+  "deposits received by this scrollVault"
+  deposits: [scrollTransfer!]! @derivedFrom(field: "vault")
+  "total value locked in scrollVault per scrollToken"
+  tokenBalances: [scrollBalance!]! @derivedFrom(field: "vault")
   "total number of depositors"
   totalDepositors: BigInt!
   "total value locked across all tokens"

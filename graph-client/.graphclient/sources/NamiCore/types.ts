@@ -3,7 +3,7 @@
 import { InContextSdkMethod } from '@graphql-mesh/types';
 import { MeshContext } from '@graphql-mesh/runtime';
 
-export namespace TestingCoreTypes {
+export namespace NamiCoreTypes {
   export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -333,8 +333,6 @@ export type claim = {
   funding: funding;
   /** chain id where claim is to be processed */
   chainId: Scalars['BigInt']['output'];
-  /** array of token indices */
-  tokens: Array<Scalars['BigInt']['output']>;
   /** array of token amounts */
   amounts: Array<Scalars['BigInt']['output']>;
   /** transaction hash of claim initiation */
@@ -379,12 +377,6 @@ export type claim_filter = {
   chainId_lte?: InputMaybe<Scalars['BigInt']['input']>;
   chainId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   chainId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tokens?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tokens_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tokens_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tokens_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tokens_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  tokens_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   amounts?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   amounts_not?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   amounts_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -416,7 +408,6 @@ export type claim_orderBy =
   | 'funding__attestationId'
   | 'funding__transactionHash'
   | 'chainId'
-  | 'tokens'
   | 'amounts'
   | 'transactionHash';
 
@@ -424,7 +415,7 @@ export type disaster = {
   /** the disaster id */
   id: Scalars['ID']['output'];
   /** attestation id for the disaster */
-  attestationId: Scalars['Bytes']['output'];
+  attestationId: Scalars['String']['output'];
   /** vault address created for the disaster */
   vaultAddress: Scalars['Bytes']['output'];
   /** estimated requirement in USD */
@@ -457,16 +448,26 @@ export type disaster_filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  attestationId?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_not?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  attestationId_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  attestationId_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  attestationId?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not?: InputMaybe<Scalars['String']['input']>;
+  attestationId_gt?: InputMaybe<Scalars['String']['input']>;
+  attestationId_lt?: InputMaybe<Scalars['String']['input']>;
+  attestationId_gte?: InputMaybe<Scalars['String']['input']>;
+  attestationId_lte?: InputMaybe<Scalars['String']['input']>;
+  attestationId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  attestationId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  attestationId_contains?: InputMaybe<Scalars['String']['input']>;
+  attestationId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_starts_with?: InputMaybe<Scalars['String']['input']>;
+  attestationId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_ends_with?: InputMaybe<Scalars['String']['input']>;
+  attestationId_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   vaultAddress?: InputMaybe<Scalars['Bytes']['input']>;
   vaultAddress_not?: InputMaybe<Scalars['Bytes']['input']>;
   vaultAddress_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -542,7 +543,7 @@ export type funding = {
   /** whether funding has been claimed */
   claimed: Scalars['Boolean']['output'];
   /** attestation id for funding approval */
-  attestationId: Scalars['Bytes']['output'];
+  attestationId: Scalars['String']['output'];
   /** transaction hash of funding unlock */
   transactionHash: Scalars['Bytes']['output'];
 };
@@ -620,16 +621,26 @@ export type funding_filter = {
   claimed_not?: InputMaybe<Scalars['Boolean']['input']>;
   claimed_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   claimed_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
-  attestationId?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_not?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  attestationId_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  attestationId_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  attestationId_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  attestationId?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not?: InputMaybe<Scalars['String']['input']>;
+  attestationId_gt?: InputMaybe<Scalars['String']['input']>;
+  attestationId_lt?: InputMaybe<Scalars['String']['input']>;
+  attestationId_gte?: InputMaybe<Scalars['String']['input']>;
+  attestationId_lte?: InputMaybe<Scalars['String']['input']>;
+  attestationId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  attestationId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  attestationId_contains?: InputMaybe<Scalars['String']['input']>;
+  attestationId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_starts_with?: InputMaybe<Scalars['String']['input']>;
+  attestationId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_ends_with?: InputMaybe<Scalars['String']['input']>;
+  attestationId_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  attestationId_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
   transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
   transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -714,7 +725,7 @@ export type funding_orderBy =
   };
 
   export type Context = {
-      ["TestingCore"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
+      ["NamiCore"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
       
     };
 }

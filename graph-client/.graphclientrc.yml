@@ -36,3 +36,4 @@ sources:
 
 documents:
   - ./graphql/GetDisasters.gql
+  - ./graphql/GetBalances.gql

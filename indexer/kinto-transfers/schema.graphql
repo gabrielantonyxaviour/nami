@@ -1,37 +1,37 @@
-type token @entity {
-  "token contract address"
+type kintoToken @entity {
+  "kintoToken contract address"
   id: ID!
 
-  "token name"
+  "kintoToken name"
   name: String!
 
-  "token symbol"
+  "kintoToken symbol"
   symbol: String!
 
-  "all transfers of this token"
-  transfers: [transfer!]! @derivedFrom(field: "token")
+  "all transfers of this kintoToken"
+  transfers: [kintoTransfer!]! @derivedFrom(field: "token")
 }
 
-type account @entity {
+type kintoAccount @entity {
   "account address"
   id: ID!
   "transfers where this account is the sender"
-  transfersOut: [transfer!]! @derivedFrom(field: "from")
+  transfersOut: [kintoTransfer!]! @derivedFrom(field: "from")
   "transfers where this account is the receiver"
-  transfersIn: [transfer!]! @derivedFrom(field: "to")
-  "balances for each token"
-  balances: [balance!]! @derivedFrom(field: "account")
+  transfersIn: [kintoTransfer!]! @derivedFrom(field: "to")
+  "balances for each kintoToken"
+  balances: [kintoBalance!]! @derivedFrom(field: "account")
 }
 
-type balance @entity {
-  "account address + token address"
+type kintoBalance @entity {
+  "account address + kintoToken address"
   id: ID!
   "the account that holds the balance"
-  account: account!
-  "the token"
-  token: token!
+  account: kintoAccount!
+  "the kintoToken"
+  token: kintoToken!
   "the vault if this balance belongs to one"
-  vault: vault
+  vault: kintoVault
   "current balance"
   amount: BigInt!
   "block number of last update"
@@ -40,17 +40,17 @@ type balance @entity {
   lastUpdateTimestamp: BigInt!
 }
 
-type transfer @entity {
+type kintoTransfer @entity {
   "transaction hash + log index"
   id: ID!
-  "the token being transferred"
-  token: token!
+  "the kintoToken being transferred"
+  token: kintoToken!
   "sender address"
-  from: account!
+  from: kintoAccount!
   "receiver address"
-  to: account!
+  to: kintoAccount!
   "vault if this is a vault deposit"
-  vault: vault
+  vault: kintoVault
   "amount transferred"
   amount: BigInt!
   "block number"
@@ -61,13 +61,13 @@ type transfer @entity {
   transactionHash: Bytes!
 }
 
-type vault @entity {
+type kintoVault @entity {
   "vault address"
   id: ID!
   "deposits received by this vault"
-  deposits: [transfer!]! @derivedFrom(field: "vault")
-  "total value locked in vault per token"
-  tokenBalances: [balance!]! @derivedFrom(field: "vault")
+  deposits: [kintoTransfer!]! @derivedFrom(field: "vault")
+  "total value locked in vault per kintoToken"
+  tokenBalances: [kintoBalance!]! @derivedFrom(field: "vault")
   "total number of depositors"
   totalDepositors: BigInt!
   "total value locked across all tokens"

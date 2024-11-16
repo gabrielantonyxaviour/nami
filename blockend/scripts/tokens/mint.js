@@ -9,14 +9,14 @@ const {
 require("dotenv").config();
 
 async function main() {
-  const provider = new ethers.JsonRpcProvider(networks.baseSepolia.url);
+  const provider = new ethers.JsonRpcProvider(networks.kinto.url);
   const signer = new ethers.Wallet(
     process.env.TEST_PRIVATE_KEY || "",
     provider
   );
 
   const coreContract = new Contract(
-    networks.baseSepolia.tokens.usdc,
+    networks.kinto.tokens.usdt,
     erc20Abi,
     signer
   );
@@ -30,7 +30,7 @@ async function main() {
   console.log("Transaction Hash: ", tx.hash);
 
   console.log("\n View In Explorer...");
-  console.log(networks.baseSepolia.blockExplorer + "/tx/" + tx.hash);
+  console.log(networks.kinto.blockExplorer + "/tx/" + tx.hash);
 }
 
 main();

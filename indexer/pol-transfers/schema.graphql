@@ -1,38 +1,38 @@
-type token @entity {
-  "token contract address"
+type polToken @entity {
+  "polToken contract address"
   id: ID!
 
-  "token name"
+  "polToken name"
   name: String!
 
-  "token symbol"
+  "polToken symbol"
   symbol: String!
 
-  "all transfers of this token"
-  transfers: [transfer!]! @derivedFrom(field: "token")
+  "all transfers of this polToken"
+  transfers: [polTransfer!]! @derivedFrom(field: "token")
 }
 
-type account @entity {
-  "account address"
+type polAccount @entity {
+  "polAccount address"
   id: ID!
-  "transfers where this account is the sender"
-  transfersOut: [transfer!]! @derivedFrom(field: "from")
-  "transfers where this account is the receiver"
-  transfersIn: [transfer!]! @derivedFrom(field: "to")
-  "balances for each token"
-  balances: [balance!]! @derivedFrom(field: "account")
+  "transfers where this polAccount is the sender"
+  transfersOut: [polTransfer!]! @derivedFrom(field: "from")
+  "transfers where this polAccount is the receiver"
+  transfersIn: [polTransfer!]! @derivedFrom(field: "to")
+  "balances for each polToken"
+  balances: [polBalance!]! @derivedFrom(field: "account")
 }
 
-type balance @entity {
-  "account address + token address"
+type polBalance @entity {
+  "polAccount address + polToken address"
   id: ID!
-  "the account that holds the balance"
-  account: account!
-  "the token"
-  token: token!
-  "the vault if this balance belongs to one"
-  vault: vault
-  "current balance"
+  "the polAccount that holds the polBalance"
+  account: polAccount!
+  "the polToken"
+  token: polToken!
+  "the polVault if this polBalance belongs to one"
+  vault: polVault
+  "current polBalance"
   amount: BigInt!
   "block number of last update"
   lastUpdateBlock: BigInt!
@@ -40,17 +40,17 @@ type balance @entity {
   lastUpdateTimestamp: BigInt!
 }
 
-type transfer @entity {
+type polTransfer @entity {
   "transaction hash + log index"
   id: ID!
-  "the token being transferred"
-  token: token!
+  "the polToken being transferred"
+  token: polToken!
   "sender address"
-  from: account!
+  from: polAccount!
   "receiver address"
-  to: account!
-  "vault if this is a vault deposit"
-  vault: vault
+  to: polAccount!
+  "polVault if this is a polVault deposit"
+  vault: polVault
   "amount transferred"
   amount: BigInt!
   "block number"
@@ -61,13 +61,13 @@ type transfer @entity {
   transactionHash: Bytes!
 }
 
-type vault @entity {
-  "vault address"
+type polVault @entity {
+  "polVault address"
   id: ID!
-  "deposits received by this vault"
-  deposits: [transfer!]! @derivedFrom(field: "vault")
-  "total value locked in vault per token"
-  tokenBalances: [balance!]! @derivedFrom(field: "vault")
+  "deposits received by this polVault"
+  deposits: [polTransfer!]! @derivedFrom(field: "vault")
+  "total value locked in polVault per polToken"
+  tokenBalances: [polBalance!]! @derivedFrom(field: "vault")
   "total number of depositors"
   totalDepositors: BigInt!
   "total value locked across all tokens"

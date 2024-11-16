@@ -3,11 +3,11 @@ import { Transfer as WETHTransferEvent } from "../generated/WETH/WETH";
 import { Transfer as USDCTransferEvent } from "../generated/USDC/USDC";
 import { Transfer as USDTTransferEvent } from "../generated/USDT/USDT";
 import {
-  token as Token,
-  account as Account,
-  transfer as Transfer,
-  balance as Balance,
-  vault as Vault,
+  ethToken as Token,
+  ethAccount as Account,
+  ethTransfer as Transfer,
+  ethBalance as Balance,
+  ethVault as Vault,
 } from "../generated/schema";
 
 export function handleWETHTransfer(event: WETHTransferEvent): void {

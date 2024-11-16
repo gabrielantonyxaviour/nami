@@ -1,4 +1,4 @@
-type token @entity {
+type baseToken @entity {
   "token contract address"
   id: ID!
 
@@ -9,30 +9,30 @@ type token @entity {
   symbol: String!
 
   "all transfers of this token"
-  transfers: [transfer!]! @derivedFrom(field: "token")
+  transfers: [baseTransfer!]! @derivedFrom(field: "token")
 }
 
-type account @entity {
+type baseAccount @entity {
   "account address"
   id: ID!
   "transfers where this account is the sender"
-  transfersOut: [transfer!]! @derivedFrom(field: "from")
+  transfersOut: [baseTransfer!]! @derivedFrom(field: "from")
   "transfers where this account is the receiver"
-  transfersIn: [transfer!]! @derivedFrom(field: "to")
+  transfersIn: [baseTransfer!]! @derivedFrom(field: "to")
   "balances for each token"
-  balances: [balance!]! @derivedFrom(field: "account")
+  balances: [baseBalance!]! @derivedFrom(field: "account")
 }
 
-type balance @entity {
+type baseBalance @entity {
   "account address + token address"
   id: ID!
-  "the account that holds the balance"
-  account: account!
+  "the account that holds the baseBalance"
+  account: baseAccount!
   "the token"
-  token: token!
-  "the vault if this balance belongs to one"
-  vault: vault
-  "current balance"
+  token: baseToken!
+  "the vault if this baseBalance belongs to one"
+  vault: baseVault
+  "current baseBalance"
   amount: BigInt!
   "block number of last update"
   lastUpdateBlock: BigInt!
@@ -40,17 +40,17 @@ type balance @entity {
   lastUpdateTimestamp: BigInt!
 }
 
-type transfer @entity {
+type baseTransfer @entity {
   "transaction hash + log index"
   id: ID!
   "the token being transferred"
-  token: token!
+  token: baseToken!
   "sender address"
-  from: account!
+  from: baseAccount!
   "receiver address"
-  to: account!
+  to: baseAccount!
   "vault if this is a vault deposit"
-  vault: vault
+  vault: baseVault
   "amount transferred"
   amount: BigInt!
   "block number"
@@ -61,13 +61,13 @@ type transfer @entity {
   transactionHash: Bytes!
 }
 
-type vault @entity {
+type baseVault @entity {
   "vault address"
   id: ID!
   "deposits received by this vault"
-  deposits: [transfer!]! @derivedFrom(field: "vault")
+  deposits: [baseTransfer!]! @derivedFrom(field: "vault")
   "total value locked in vault per token"
-  tokenBalances: [balance!]! @derivedFrom(field: "vault")
+  tokenBalances: [baseBalance!]! @derivedFrom(field: "vault")
   "total number of depositors"
   totalDepositors: BigInt!
   "total value locked across all tokens"

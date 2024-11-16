@@ -377,8 +377,6 @@ type claim {
   funding: funding!
   """chain id where claim is to be processed"""
   chainId: BigInt!
-  """array of token indices"""
-  tokens: [BigInt!]!
   """array of token amounts"""
   amounts: [BigInt!]!
   """transaction hash of claim initiation"""
@@ -423,12 +421,6 @@ input claim_filter {
   chainId_lte: BigInt
   chainId_in: [BigInt!]
   chainId_not_in: [BigInt!]
-  tokens: [BigInt!]
-  tokens_not: [BigInt!]
-  tokens_contains: [BigInt!]
-  tokens_contains_nocase: [BigInt!]
-  tokens_not_contains: [BigInt!]
-  tokens_not_contains_nocase: [BigInt!]
   amounts: [BigInt!]
   amounts_not: [BigInt!]
   amounts_contains: [BigInt!]
@@ -460,7 +452,6 @@ enum claim_orderBy {
   funding__attestationId
   funding__transactionHash
   chainId
-  tokens
   amounts
   transactionHash
 }
@@ -469,7 +460,7 @@ type disaster {
   """the disaster id"""
   id: ID!
   """attestation id for the disaster"""
-  attestationId: Bytes!
+  attestationId: String!
   """vault address created for the disaster"""
   vaultAddress: Bytes!
   """estimated requirement in USD"""
@@ -493,16 +484,26 @@ input disaster_filter {
   id_lte: ID
   id_in: [ID!]
   id_not_in: [ID!]
-  attestationId: Bytes
-  attestationId_not: Bytes
-  attestationId_gt: Bytes
-  attestationId_lt: Bytes
-  attestationId_gte: Bytes
-  attestationId_lte: Bytes
-  attestationId_in: [Bytes!]
-  attestationId_not_in: [Bytes!]
-  attestationId_contains: Bytes
-  attestationId_not_contains: Bytes
+  attestationId: String
+  attestationId_not: String
+  attestationId_gt: String
+  attestationId_lt: String
+  attestationId_gte: String
+  attestationId_lte: String
+  attestationId_in: [String!]
+  attestationId_not_in: [String!]
+  attestationId_contains: String
+  attestationId_contains_nocase: String
+  attestationId_not_contains: String
+  attestationId_not_contains_nocase: String
+  attestationId_starts_with: String
+  attestationId_starts_with_nocase: String
+  attestationId_not_starts_with: String
+  attestationId_not_starts_with_nocase: String
+  attestationId_ends_with: String
+  attestationId_ends_with_nocase: String
+  attestationId_not_ends_with: String
+  attestationId_not_ends_with_nocase: String
   vaultAddress: Bytes
   vaultAddress_not: Bytes
   vaultAddress_gt: Bytes
@@ -579,7 +580,7 @@ type funding {
   """whether funding has been claimed"""
   claimed: Boolean!
   """attestation id for funding approval"""
-  attestationId: Bytes!
+  attestationId: String!
   """transaction hash of funding unlock"""
   transactionHash: Bytes!
 }
@@ -648,16 +649,26 @@ input funding_filter {
   claimed_not: Boolean
   claimed_in: [Boolean!]
   claimed_not_in: [Boolean!]
-  attestationId: Bytes
-  attestationId_not: Bytes
-  attestationId_gt: Bytes
-  attestationId_lt: Bytes
-  attestationId_gte: Bytes
-  attestationId_lte: Bytes
-  attestationId_in: [Bytes!]
-  attestationId_not_in: [Bytes!]
-  attestationId_contains: Bytes
-  attestationId_not_contains: Bytes
+  attestationId: String
+  attestationId_not: String
+  attestationId_gt: String
+  attestationId_lt: String
+  attestationId_gte: String
+  attestationId_lte: String
+  attestationId_in: [String!]
+  attestationId_not_in: [String!]
+  attestationId_contains: String
+  attestationId_contains_nocase: String
+  attestationId_not_contains: String
+  attestationId_not_contains_nocase: String
+  attestationId_starts_with: String
+  attestationId_starts_with_nocase: String
+  attestationId_not_starts_with: String
+  attestationId_not_starts_with_nocase: String
+  attestationId_ends_with: String
+  attestationId_ends_with_nocase: String
+  attestationId_not_ends_with: String
+  attestationId_not_ends_with_nocase: String
   transactionHash: Bytes
   transactionHash_not: Bytes
   transactionHash_gt: Bytes
