@@ -5,7 +5,7 @@ export default function XPosts() {
   const posts = [
     {
       id: 1,
-      content: "Emergency!!! Bangkok Floods: 8M people affected",
+      content: "Emergency!!! Thailand Floods: 8M people affected",
       image: null,
     },
     {

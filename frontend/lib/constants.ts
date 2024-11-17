@@ -264,17 +264,17 @@ export const mapsStyle = [
 export const disasters: Disaster[] = [
   {
     id: 1,
-    title: "Floods in Bangkok",
+    title: "Floods in Thailand",
     images: ["/disasters/bangkok.png"],
     coordinates: {
       lat: 13.7563,
       lng: 100.5018,
     },
     description:
-      "Severe monsoon flooding has inundated large parts of Bangkok, affecting millions of residents. Critical infrastructure and homes are underwater, requiring immediate humanitarian assistance for evacuation, emergency shelter, and clean water distribution.",
+      "Severe monsoon flooding has inundated large parts of Thailand, affecting millions of residents. Critical infrastructure and homes are underwater, requiring immediate humanitarian assistance for evacuation, emergency shelter, and clean water distribution.",
     attestationId: "onchain_evm_84532_0xb23",
     createdAt: "2024-11-08T14:30:00Z",
-    totalRaisedInUSD: 245000,
+    totalRaisedInUSD: 0,
     requiredFundsInUSD: 800000,
     vaultAddress: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a",
     subName: "bangkok.nami.eth",
@@ -291,8 +291,8 @@ export const disasters: Disaster[] = [
     description:
       "Massive wildfires are ravaging the Amazon rainforest, threatening indigenous communities and critical wildlife habitats. Emergency funds needed for firefighting efforts, community relocation, and environmental preservation measures.",
     attestationId: "onchain_evm_84532_0xb23",
-    createdAt: "2024-11-09T10:15:00Z",
-    totalRaisedInUSD: 378000,
+    createdAt: "2024-09-12T00:00:00Z",
+    totalRaisedInUSD: 0,
     requiredFundsInUSD: 1200000,
     vaultAddress: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a",
     subName: "brazil.nami.eth",
@@ -309,7 +309,7 @@ export const disasters: Disaster[] = [
     description:
       "A 7.2 magnitude earthquake has struck the Greater Tokyo Area, causing significant structural damage and disrupting essential services. Immediate support required for search and rescue operations, temporary housing, and infrastructure stabilization.",
     attestationId: "onchain_evm_84532_0xb23",
-    createdAt: "2024-11-07T03:45:00Z",
+    createdAt: "2024-10-25T00:00:00Z",
     totalRaisedInUSD: 892000,
     requiredFundsInUSD: 2000000,
     vaultAddress: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a",
@@ -319,7 +319,6 @@ export const disasters: Disaster[] = [
     id: 4,
     title: "Typhoon in Vietnam",
     images: ["/disasters/vietnam.png"],
-
     coordinates: {
       lat: 21.0285,
       lng: 105.8542,
