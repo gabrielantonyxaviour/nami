@@ -24,15 +24,21 @@ export default function Donate({ id }: { id: string }) {
 
   useEffect(() => {
     (async function () {
-      const data = await graphClient.query({
-        query: GET_DISASTERS_BY_ADDRESS_QUERY,
-        variables: {
-          vault: id, // TODO: Change this to disasterId
-          to: id,
-        },
-      });
-      console.log(data);
-      setDonationData(data.data.disasters);
+      try {
+        const data = await graphClient.query({
+          query: GET_DISASTERS_BY_ADDRESS_QUERY,
+          variables: {
+            vault: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a", // TODO: Change this to disasterId
+            to: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a",
+            tokenSymbol: null,
+            chain: null,
+          },
+        });
+        console.log(data);
+        setDonationData(data.data.disasters);
+      } catch (e) {
+        console.log(e);
+      }
     })();
   }, [id]);
 

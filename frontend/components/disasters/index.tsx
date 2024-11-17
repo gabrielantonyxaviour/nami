@@ -31,17 +31,21 @@ export default function Disasters() {
   }>({ lat: 35.6762, lng: 15.8917 });
 
   useEffect(() => {
-    (async function () {
-      const data = await graphClient.query({
-        query: GET_DISASTERS_QUERY,
-        variables: {
-          orderBy: sort,
-          orderDirection: order,
-        },
-      });
-      console.log(data);
-      setSubgraphData(data.data.disasters);
-    })();
+    try {
+      (async function () {
+        const data = await graphClient.query({
+          query: GET_DISASTERS_QUERY,
+          variables: {
+            orderBy: sort,
+            orderDirection: order,
+          },
+        });
+        console.log(data);
+        setSubgraphData(data.data.disasters);
+      })();
+    } catch (e) {
+      console.log(e);
+    }
   }, [sort, order]);
 
   const currentDisasters = useMemo(() => {
