@@ -45,13 +45,14 @@ import { timeAgo } from "@/lib/utils";
 import { idToChainInfo } from "@/lib/constants";
 import { baseSepolia, kinto, polygonAmoy, sepolia } from "viem/chains";
 import { DropdownMenuRadioGroup } from "@radix-ui/react-dropdown-menu";
+import { useEnvironmentStore } from "../context";
 
 // Sample data and types
 const data: Donation[] = [
   {
     id: "1",
     address: "0x3A1D4A8433e893E7B1dD6aAa2A91fB2e9f54D1F2",
-    timestamp: "2024-11-08T14:30:00Z",
+    timestamp: "2024-11-17T09:30:00Z",
     chainId: sepolia.id,
     transaction: "0x5d5b5f84cd3b3d1f563d3b28f5e13ff3a9f0f2c7",
     attestation: "0x8b8e6b84dd6f1d3e2e8f2e3d4d5d6f7f3e2d3e3a",
@@ -60,7 +61,7 @@ const data: Donation[] = [
   {
     id: "2",
     address: "0x6b2C4D7E8Cdb8b3b2F8d6C2e4c91d1f3a9d9F8E3",
-    timestamp: "2024-11-09T10:45:00Z",
+    timestamp: "2024-11-17T10:45:00Z",
     chainId: baseSepolia.id,
     transaction: "0x9f9e9d9c7b5a3e2b2c5c6d3d3d3e3f5f9f3a9c5a",
     attestation: "0x2e3f3d7c6b9d1d2f5f9f7e6d3a8f9b3c9a5f6e7a",
@@ -69,7 +70,7 @@ const data: Donation[] = [
   {
     id: "3",
     address: "0x5e3A9B2c3B8b4F9f8D2f5C6d1A8e3e7f3C9f9F7a",
-    timestamp: "2024-11-10T08:00:00Z",
+    timestamp: "2024-11-17T11:15:00Z",
     chainId: kinto.id,
     transaction: "0x1f5a9d6c3b8d4a5f9f6f3e2b9c5f7d3d9a2f1e3c",
     attestation: "0x3d7b9a2f6e3c1b5a4e8c7f9f1e3f4d9a5b6c9d2f",
@@ -78,7 +79,7 @@ const data: Donation[] = [
   {
     id: "4",
     address: "0x7a2D8f9f4D5b8a3e9D6c1b7f2e5d4c8f9b3c5f1a",
-    timestamp: "2024-11-10T19:15:00Z",
+    timestamp: "2024-11-17T12:30:00Z",
     chainId: baseSepolia.id,
     transaction: "0x8f6c5a2f9d7b1e3c5e9d2f8f3a4c9b7f6a1d9e2c",
     attestation: "0x9f7b5d3a4f8c1e6c3b9d2e3f5c9d1f3a8b7c6d2e",
@@ -87,7 +88,7 @@ const data: Donation[] = [
   {
     id: "5",
     address: "0x4f5B2a9f3D7d8e1c9f6f2a5b8c4d9b3c7a1e5f3d",
-    timestamp: "2024-11-11T13:25:00Z",
+    timestamp: "2024-11-17T13:25:00Z",
     chainId: polygonAmoy.id,
     transaction: "0x6d3f2e9c5b7a1e4f9f8d2f3d1c5a6e9d8f3b2a5f",
     attestation: "0x7f5e3c2b4a9d1e6c8f9f3d5b6a7f1d9c5e8f4d2b",
@@ -206,7 +207,7 @@ const columns: ColumnDef<Donation>[] = [
                   baseSepolia.id) as number;
                 window.open(
                   idToChainInfo[chainId].blockExplorer +
-                    "/tx/" +
+                    "/address/" +
                     donation.transaction
                 );
               }}
@@ -237,7 +238,7 @@ const columns: ColumnDef<Donation>[] = [
 ];
 
 // DataTable component using ShadCN
-export default function DonationsTable() {
+export default function DonationsTable({ apply }: { apply: boolean }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -247,9 +248,24 @@ export default function DonationsTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const { overallDonations } = useEnvironmentStore((store) => store);
 
   const table = useReactTable({
-    data,
+    data: apply
+      ? data
+      : overallDonations > 0
+      ? [
+          {
+            id: "1",
+            address: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a",
+            timestamp: new Date(Date.now() - 30 * 1000).toISOString(),
+            chainId: polygonAmoy.id,
+            transaction: "0x79E72dCc5beEE7F288c7e73C5052FEEBb9C491d9",
+            attestation: "0x8b8e6b84dd6f1d3e2e8f2e3d4d5d6f7f3e2d3e3a",
+            amount: 10,
+          },
+        ]
+      : [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

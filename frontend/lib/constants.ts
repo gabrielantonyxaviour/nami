@@ -1,7 +1,13 @@
 // import { baseSepolia, polygonAmoy, sepolia } from "viem/chains";
 // import { Agent, Chain } from "./type";
 
-import { Chain, defineChain, zeroAddress } from "viem";
+import {
+  Chain,
+  createPublicClient,
+  defineChain,
+  http,
+  zeroAddress,
+} from "viem";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { Disaster, Token } from "./type";
 import {
@@ -61,14 +67,6 @@ export const idToChainInfo: Record<
     rpcUrl: "https://kinto-mainnet.calderachain.xyz/http",
     blockExplorer: "https://explorer.kinto.xyz",
   },
-  [zircuitTestnet.id]: {
-    id: 4,
-    name: zircuitTestnet.name,
-    chainId: zircuitTestnet.id,
-    image: "/chains/zircuit.jpg",
-    rpcUrl: "https://zircuit1-testnet.p2pify.com",
-    blockExplorer: "https://explorer.testnet.zircuit.com/",
-  },
   [scrollSepolia.id]: {
     id: 5,
     name: scrollSepolia.name,
@@ -91,16 +89,112 @@ export const idToChainInfo: Record<
   },
 };
 
-// export const chains: Chain[] = [
-//   {
-//     name: "Etheruem Sepolia",
-//     chainId: sepolia.id,
-//     image: "/chains/eth.png",
-//   },
-
-//   { name: "Polygon Amoy", chainId: polygonAmoy.id, image: "/chains/pol.png" },
-//   { name: "Base Sepolia", chainId: baseSepolia.id, image: "/chains/base.png" },
-// ];
+export const idToTokenInfo = {
+  [baseSepolia.id]: [
+    {
+      id: 0,
+      name: "ETH",
+      address: zeroAddress,
+      image: "/token/eth.png",
+    },
+    {
+      id: 1,
+      name: "WETH",
+      address: "0xBE3D118760d9be86688D88929c2122cEc9Ec4635",
+      image: "/token/weth.png",
+    },
+    {
+      id: 2,
+      name: "USDC",
+      address: "0x4393eD225A2F48C27eA6CeBec139190cb8EA8A5F",
+      image: "/token/usdc.png",
+    },
+    {
+      id: 3,
+      name: "USDT",
+      address: "0x9FafD4cB45410a931b538F1D97EFCC28b147E449",
+      image: "/token/usdt.svg",
+    },
+  ],
+  [polygonAmoy.id]: [
+    {
+      id: 0,
+      name: "POL",
+      address: zeroAddress,
+      image: "/chains/pol.png",
+    },
+    {
+      id: 1,
+      name: "WETH",
+      address: "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66",
+      image: "/token/weth.png",
+    },
+    {
+      id: 2,
+      name: "USDC",
+      address: "0xD4171D5a25B3A684d1952Dd8141fA27911004f12",
+      image: "/token/usdc.png",
+    },
+    {
+      id: 3,
+      name: "USDT",
+      address: "0x79E72dCc5beEE7F288c7e73C5052FEEBb9C491d9",
+      image: "/token/usdt.svg",
+    },
+  ],
+  [scrollSepolia.id]: [
+    {
+      id: 0,
+      name: "ETH",
+      address: zeroAddress,
+      image: "/token/eth.png",
+    },
+    {
+      id: 1,
+      name: "WETH",
+      address: "0x582384603173D650D634c52dD37771cFE439A888",
+      image: "/token/weth.png",
+    },
+    {
+      id: 2,
+      name: "USDC",
+      address: "0xdE6d2CaE1BA329c0a09c21Ac6Aa5958A7d355971",
+      image: "/token/usdc.png",
+    },
+    {
+      id: 3,
+      name: "USDT",
+      address: "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66",
+      image: "/token/usdt.svg",
+    },
+  ],
+  [sepolia.id]: [
+    {
+      id: 0,
+      name: "ETH",
+      address: zeroAddress,
+      image: "/token/eth.png",
+    },
+    {
+      id: 1,
+      name: "WETH",
+      address: "0xf9F24Ca70e087CA30D8A1AB45c0cd502A2B3B370",
+      image: "/token/weth.png",
+    },
+    {
+      id: 2,
+      name: "USDC",
+      address: "0x04D99018f10F500427c76dab28752f04d93c6389",
+      image: "/token/usdc.png",
+    },
+    {
+      id: 3,
+      name: "USDT",
+      address: "0xE9EA89276C4CB5945BB65F8b264fbDF7235E6Da9",
+      image: "/token/usdt.svg",
+    },
+  ],
+};
 
 export const MPC_CONTRACT = "v1.signer-prod.testnet";
 export const GOJO_CONTRACT = "gojo-protocol.testnet";
@@ -143,11 +237,509 @@ export const COMPILE_HOSTED_URL =
   "https://gojo-compile-server.onrender.com/chat";
 export const COMPILE_LOCAL_URL = "http://localhost:3001/compile";
 
-export const KINTO_APP_ADDRESS = "0x108A91edD1329e17409A86b54D4204A102534ec3";
-export const KINTO_APP_ABI = [
+export const KINTO_CORE_ADDRESS = "0x030a87fd4161F6b1749a332e23FC3AB0D5FcaC53";
+export const KINTO_CORE_ABI = [
+  {
+    inputs: [
+      {
+        internalType: "contract IMailbox",
+        name: "_mailbox",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
   {
     inputs: [],
-    name: "counter",
+    name: "AlreadyInitialized",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+    ],
+    name: "InvalidCaller",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "_origin",
+        type: "uint32",
+      },
+      {
+        internalType: "bytes32",
+        name: "_sender",
+        type: "bytes32",
+      },
+    ],
+    name: "InvalidCrosschainCaller",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "fundingId",
+        type: "uint256",
+      },
+    ],
+    name: "InvalidFundingId",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotMailbox",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "fundingRequestId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "disasterId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "applyingOrgAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "AppliedForFunding",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "disasterId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "attestationId",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "estimatedRequirementInUSD",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "vaultAddress",
+        type: "address",
+      },
+    ],
+    name: "DisasterCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "fundingId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "beneficiary",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint32",
+        name: "chain",
+        type: "uint32",
+      },
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "token",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "FundClaimFailed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "fundingId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "beneficiary",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint32",
+            name: "chainId",
+            type: "uint32",
+          },
+          {
+            internalType: "uint256",
+            name: "ethAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "wethAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "usdcAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "usdtAmount",
+            type: "uint256",
+          },
+        ],
+        indexed: false,
+        internalType: "struct NamiCore.Claim[]",
+        name: "claims",
+        type: "tuple[]",
+      },
+    ],
+    name: "FundClaimInitiated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "fundingId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "disasterId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "attestationId",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "beneficiary",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint32",
+            name: "chainId",
+            type: "uint32",
+          },
+          {
+            internalType: "uint256",
+            name: "ethAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "wethAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "usdcAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "usdtAmount",
+            type: "uint256",
+          },
+        ],
+        indexed: false,
+        internalType: "struct NamiCore.Claim[]",
+        name: "claims",
+        type: "tuple[]",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amountInUsd",
+        type: "uint256",
+      },
+    ],
+    name: "FundingUnlocked",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "BASE_DOMAIN_ID",
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "KINTO_DOMAIN_ID",
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint64",
+        name: "_attestationId",
+        type: "uint64",
+      },
+      {
+        internalType: "uint256",
+        name: "_estimatedRequirementInUSD",
+        type: "uint256",
+      },
+    ],
+    name: "_createDisaster",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_disasterId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint64",
+        name: "_attestationId",
+        type: "uint64",
+      },
+      {
+        internalType: "address",
+        name: "_beneficiary",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint32",
+            name: "chainId",
+            type: "uint32",
+          },
+          {
+            internalType: "uint256",
+            name: "ethAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "wethAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "usdcAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "usdtAmount",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct NamiCore.Claim[]",
+        name: "_claims",
+        type: "tuple[]",
+      },
+      {
+        internalType: "uint256",
+        name: "_totalAmountInUSD",
+        type: "uint256",
+      },
+    ],
+    name: "_unlockFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+    ],
+    name: "addressToBytes32",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "_bytes32",
+        type: "bytes32",
+      },
+    ],
+    name: "bytes32ToAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_fundingId",
+        type: "uint256",
+      },
+    ],
+    name: "claimFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "claims",
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "chainId",
+        type: "uint32",
+      },
+      {
+        internalType: "uint256",
+        name: "ethAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "wethAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "usdcAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "usdtAmount",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+    ],
+    name: "crosschainAddresses",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "disasterCount",
     outputs: [
       {
         internalType: "uint256",
@@ -159,15 +751,76 @@ export const KINTO_APP_ABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "decrement",
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "disasters",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "attestationId",
+        type: "uint64",
+      },
+      {
+        internalType: "address",
+        name: "vaultAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "estimatedRequirementInUSD",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "funding",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "disasterId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "beneficiary",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amountInUSD",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "claimed",
+        type: "bool",
+      },
+      {
+        internalType: "uint64",
+        name: "attestationId",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "getCounter",
+    name: "fundingCount",
     outputs: [
       {
         internalType: "uint256",
@@ -179,10 +832,308 @@ export const KINTO_APP_ABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "fundingRequests",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "disasterId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "applyingOrgAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
-    name: "increment",
+    name: "fundingRequestsCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_disasterId",
+        type: "uint256",
+      },
+    ],
+    name: "getDisaster",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint64",
+            name: "attestationId",
+            type: "uint64",
+          },
+          {
+            internalType: "address",
+            name: "vaultAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "estimatedRequirementInUSD",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct NamiCore.Disaster",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_fundingId",
+        type: "uint256",
+      },
+    ],
+    name: "getFunding",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "disasterId",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "beneficiary",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amountInUSD",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "claimed",
+            type: "bool",
+          },
+          {
+            internalType: "uint64",
+            name: "attestationId",
+            type: "uint64",
+          },
+        ],
+        internalType: "struct NamiCore.Funding",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "_origin",
+        type: "uint32",
+      },
+      {
+        internalType: "bytes32",
+        name: "_sender",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "_data",
+        type: "bytes",
+      },
+    ],
+    name: "handle",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_namiAiClient",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_vaultFactory",
+        type: "address",
+      },
+    ],
+    name: "initialize",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "initialized",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "mailbox",
+    outputs: [
+      {
+        internalType: "contract IMailbox",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "namiAiClient",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_disasterId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "requestFunding",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32[]",
+        name: "_origin",
+        type: "uint32[]",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "_addresses",
+        type: "bytes32[]",
+      },
+    ],
+    name: "setCrosschainAddresses",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_namiAiClient",
+        type: "address",
+      },
+    ],
+    name: "setNamiAiClient",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_owner",
+        type: "address",
+      },
+    ],
+    name: "setOwner",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_vaultFactory",
+        type: "address",
+      },
+    ],
+    name: "setVaultFactory",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "vaultFactory",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];
@@ -275,9 +1226,9 @@ export const disasters: Disaster[] = [
     attestationId: "onchain_evm_84532_0xb23",
     createdAt: "2024-11-08T14:30:00Z",
     totalRaisedInUSD: 0,
-    requiredFundsInUSD: 800000,
+    requiredFundsInUSD: 250000,
     vaultAddress: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a",
-    subName: "bangkok.nami.eth",
+    subName: "thailand.nami.eth",
   },
   {
     id: 2,
@@ -571,3 +1522,22 @@ export const graphClient = new ApolloClient({
   uri: GRAPH_CLIENT_URL,
   cache: new InMemoryCache(),
 });
+
+export const publicClients: Record<any, any> = {
+  [baseSepolia.id]: createPublicClient({
+    chain: baseSepolia,
+    transport: http(),
+  }),
+  [scrollSepolia.id]: createPublicClient({
+    chain: scrollSepolia,
+    transport: http(),
+  }),
+  [polygonAmoy.id]: createPublicClient({
+    chain: polygonAmoy,
+    transport: http(),
+  }),
+  [sepolia.id]: createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  }),
+};

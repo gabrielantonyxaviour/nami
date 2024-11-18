@@ -1,4 +1,10 @@
-import { base } from "wagmi/chains"; // add baseSepolia for testing
+import {
+  base,
+  baseSepolia,
+  polygonAmoy,
+  scrollSepolia,
+  sepolia,
+} from "wagmi/chains"; // add baseSepolia for testing
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import {
   metaMaskWallet,
@@ -23,7 +29,7 @@ export function getConfig() {
         wallets: [rainbowWallet, metaMaskWallet],
       },
     ],
-    chains: [base],
+    chains: [baseSepolia, polygonAmoy, sepolia, scrollSepolia],
     ssr: true, // If your dApp uses server side rendering (SSR)
   });
 }

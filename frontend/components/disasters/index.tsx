@@ -29,20 +29,20 @@ export default function Disasters() {
     lat: number;
     lng: number;
   }>({ lat: 35.6762, lng: 15.8917 });
-  const [fetchingDisasters, setFetchingDisasters] = useState(false);
+  const [fetchingDisasters, setFetchingDisasters] = useState(true);
 
   useEffect(() => {
     try {
       (async function () {
-        const data = await graphClient.query({
-          query: GET_DISASTERS_QUERY,
-          variables: {
-            orderBy: sort,
-            orderDirection: order,
-          },
-        });
-        console.log(data);
-        setSubgraphData(data.data.disasters);
+        // const data = await graphClient.query({
+        //   query: GET_DISASTERS_QUERY,
+        //   variables: {
+        //     orderBy: sort,
+        //     orderDirection: order,
+        //   },
+        // });
+        // console.log(data);
+        // setSubgraphData(data.data.disasters);
       })();
     } catch (e) {
       console.log(e);
@@ -51,6 +51,27 @@ export default function Disasters() {
 
   useEffect(() => {
     if (fetchingDisasters) {
+      (async function () {
+        try {
+          const response = await fetch(
+            "https://54c9-210-1-49-171.ngrok-free.app/report-disaster",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json", // Specify the content type
+              },
+              body: JSON.stringify({
+                query: "Tell me about recent disasters in November 2024",
+              }),
+            }
+          );
+          const data = await response.json();
+          console.log(data);
+          setFetchingDisasters(false);
+        } catch (e) {
+          console.log(e);
+        }
+      })();
     }
   }, [fetchingDisasters]);
 
@@ -80,6 +101,9 @@ export default function Disasters() {
             height={200}
             alt="image"
             className="mx-auto pt-20"
+            onClick={() => {
+              setFetchingDisasters(false);
+            }}
           ></Image>
           <p className="text-center sen py-4">
             Fetching Latest Disasters <br /> around the world
