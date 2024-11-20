@@ -208,7 +208,8 @@ const columns: ColumnDef<Donation>[] = [
                 window.open(
                   idToChainInfo[chainId].blockExplorer +
                     "/address/" +
-                    donation.transaction
+                    donation.transaction +
+                    "#tokentxns"
                 );
               }}
             >
@@ -260,7 +261,7 @@ export default function DonationsTable({ apply }: { apply: boolean }) {
             address: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a",
             timestamp: new Date(Date.now() - 30 * 1000).toISOString(),
             chainId: polygonAmoy.id,
-            transaction: "0x79E72dCc5beEE7F288c7e73C5052FEEBb9C491d9",
+            transaction: "0xace8655de7f2a1865ddd686cfcdd47447b86965c",
             attestation: "0x8b8e6b84dd6f1d3e2e8f2e3d4d5d6f7f3e2d3e3a",
             amount: 10,
           },
