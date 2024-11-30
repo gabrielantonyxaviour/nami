@@ -1,6 +1,7 @@
 const express = require("express");
 const { OpenAI } = require("openai");
 const axios = require("axios");
+const { google } = require("googleapis");
 const cors = require("cors");
 require("dotenv").config();
 
@@ -17,6 +18,7 @@ class CharityValidator {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
+    this.customSearch = google.customsearch("v1");
     this.searchApiKey = process.env.GOOGLE_API_KEY;
     this.history = [];
   }
@@ -84,7 +86,7 @@ class CharityValidator {
                      {
                          "isCompleted": true/false,
                          "tweet": "tweet text",
-                         "sources": ["url1", "url2"],
+                         "sources": array of strings,
                          "completionDate": "YYYY-MM-DD",
                          "organizationName": "name",
                          "amountReleased": number,

@@ -96,13 +96,10 @@ class GoogleChat {
       const response = await this.customSearch.cse.list({
         auth: GOOGLE_API_KEY,
         cx: "905d0f2d2dbee4ce1",
-        q: `(${disasterTerms}) AND (${actionTerms} OR ${impactTerms})`,
-        dateRestrict: null, // Remove the 7-day restriction
+        dateRestrict: null,
         sort: "date",
         num: 10,
-        // Use date range parameters
-        exactTerms: query, // Look for exact date mentions
-        // Use Google's date range search operators
+        exactTerms: query,
         q: `(${disasterTerms}) AND (${actionTerms} OR ${impactTerms}) after:${formattedStartDate} before:${formattedEndDate}`,
       });
 
