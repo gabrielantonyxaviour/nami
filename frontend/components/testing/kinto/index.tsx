@@ -4,7 +4,6 @@ import { useEnvironmentStore } from "../../context";
 import { Button, buttonVariants } from "../../ui/button";
 import { fetchKYCViewerInfo, shortenAddress } from "@/lib/utils";
 import Link from "next/link";
-import { KINTO_APP_ABI, KINTO_APP_ADDRESS } from "@/lib/constants";
 import { encodeFunctionData } from "viem";
 import { Address } from "@coinbase/onchainkit/identity";
 
@@ -52,19 +51,8 @@ export default function Kinto() {
           <Button
             onClick={async () => {
               try {
-                const response = kintoSdk.sendTransaction([
-                  {
-                    to: KINTO_APP_ADDRESS,
-                    data: encodeFunctionData({
-                      abi: KINTO_APP_ABI,
-                      functionName: "increment",
-                      args: [],
-                    }),
-                    value: BigInt(0),
-                  },
-                ]);
-                console.log("Tx response:", response);
-                setTxResponse(JSON.stringify(response));
+                // console.log("Tx response:", response);
+                // setTxResponse(JSON.stringify(response));
               } catch (e) {
                 alert(
                   "Kinto is only available on Mainnet. Need to top up my paymaster with Mainnet ETH to send transactions :/"

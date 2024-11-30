@@ -386,8 +386,8 @@ export default function DonateHero({ disaster }: { disaster: Disaster }) {
               <p>Choose Token</p>
               <div className="flex space-x-3 justify-center">
                 {idToTokenInfo[baseSepolia.id]
-                  .sort((a, b) => a.id - b.id)
-                  .map((tokenInfo) => (
+                  .sort((a: any, b: any) => a.id - b.id)
+                  .map((tokenInfo: any) => (
                     <Image
                       key={tokenInfo.id}
                       src={tokenInfo.image}
@@ -416,12 +416,12 @@ export default function DonateHero({ disaster }: { disaster: Disaster }) {
                   }}
                 ></Input>
                 {idToTokenInfo[baseSepolia.id].filter(
-                  (token) => token.address == selectedTokenAddress
+                  (token: any) => token.address == selectedTokenAddress
                 ).length > 0 && (
                   <p className="sen ">
                     {
                       idToTokenInfo[baseSepolia.id].filter(
-                        (token) => token.address == selectedTokenAddress
+                        (token: any) => token.address == selectedTokenAddress
                       )[0].name
                     }
                   </p>
@@ -500,9 +500,9 @@ export default function DonateHero({ disaster }: { disaster: Disaster }) {
             <DialogContent className=" w-[500px] px-4 py-8">
               <p>Choose Token</p>
               <div className="flex space-x-3 justify-center">
-                {(idToTokenInfo[selectedChainId as any] as any)
-                  .sort((a, b) => a.id - b.id)
-                  .map((tokenInfo) => (
+                {idToTokenInfo[selectedChainId]
+                  .sort((a: any, b: any) => a.id - b.id)
+                  .map((tokenInfo: any) => (
                     <Image
                       key={tokenInfo.id}
                       src={tokenInfo.image}
@@ -531,12 +531,12 @@ export default function DonateHero({ disaster }: { disaster: Disaster }) {
                   }}
                 ></Input>
                 {idToTokenInfo[baseSepolia.id].filter(
-                  (token) => token.address == selectedTokenAddress
+                  (token: any) => token.address == selectedTokenAddress
                 ).length > 0 && (
                   <p className="sen ">
                     {
                       idToTokenInfo[baseSepolia.id].filter(
-                        (token) => token.address == selectedTokenAddress
+                        (token: any) => token.address == selectedTokenAddress
                       )[0].name
                     }
                   </p>

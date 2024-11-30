@@ -89,7 +89,7 @@ export const idToChainInfo: Record<
   },
 };
 
-export const idToTokenInfo = {
+export const idToTokenInfo: Record<any, any> = {
   [baseSepolia.id]: [
     {
       id: 0,
