@@ -1,3 +1,5 @@
 node_modules
 .env
 package-lock.json
+cdp_api_key.json
+wallet.json
