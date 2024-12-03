@@ -407,3 +407,22 @@ filcalibration:
   protocol: ethereum
   rpcUrls:
     - http: https://rpc.ankr.com/filecoin_testnet
+educhaintestnet:
+  blockExplorers:
+    - apiKey: anything
+      apiUrl: https://opencampus-codex.blockscout.com/api
+      family: blockscout
+      name: Educhain Testnet Blockscout Explorer
+      url: https://opencampus-codex.blockscout.com/
+  chainId: 656476
+  displayName: Edu Chain Testnet
+  domainId: 656476
+  isTestnet: true
+  name: educhain-testnet
+  nativeToken:
+    decimals: 18
+    name: Test Edu Chain
+    symbol: tEDU
+  protocol: ethereum
+  rpcUrls:
+    - http: https://rpc.open-campus-codex.gelato.digital
